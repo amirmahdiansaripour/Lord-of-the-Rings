@@ -16,7 +16,6 @@ ENEMY_CELL = 'e'
 CASTLE_CELL = 'c'
 GANDALF_CELL = 'g'
 
-
 class Cell:
     def __init__(self, x_, y_, index_, screen_):
         self.x = x_
@@ -38,21 +37,19 @@ class Screen:
         self.WIDTH = int(width) * PIC_SIZE_Y
         self.HEIGHT = int(height) * PIC_SIZE_X
         self.SCREEN = pygame.display.set_mode((int(self.WIDTH), int(self.HEIGHT)))
-        self.CELLS = []
-        self.initField()
         
-
     def initField(self):
+        table = []
         cellCounter = 0
         for x in range(0, self.WIDTH, PIC_SIZE_Y):
             for y in range(0, self.HEIGHT, PIC_SIZE_X):
                 cell = Cell(x, y, cellCounter, self.SCREEN)
-                self.CELLS.append(cell)
+                table.append(cell)
                 cellCounter += 1
+        return table
 
-
-    def draw(self):
-        for cell in self.CELLS:
+    def draw(self, table):
+        for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.state == GANDALF_CELL):
@@ -65,23 +62,18 @@ class Screen:
                 self.SCREEN.blit(ENEMY, point)
         pygame.display.update()    
 
-
-    def printIndices(self):
-        for cell in self.CELLS:
+    def placePeices(self, table):
+        for cell in table:
             cell.printIndex()
-
-
-    def placePeices(self):
-        self.printIndices()
         placeOfGandalf = input("Enter gandalf place: ")
-        self.CELLS[int(placeOfGandalf)].state = GANDALF_CELL
+        table[int(placeOfGandalf)].state = GANDALF_CELL
         placeOfCastle = input("Enter castle place: ")
-        self.CELLS[int(placeOfCastle)].state = CASTLE_CELL
+        table[int(placeOfCastle)].state = CASTLE_CELL
         placesOfAllies = input("Enter places of allies: ").split()
         for place in placesOfAllies:
-            self.CELLS[int(place)].state = ALLY_CELL
+            table[int(place)].state = ALLY_CELL
         placesOfEnemies = input("Enter places of enemies: ").split()
         for place in placesOfEnemies:
-            self.CELLS[int(place)].state = ENEMY_CELL
+            table[int(place)].state = ENEMY_CELL
         self.SCREEN.fill(BLACK)               
         self.PLACES_DONE = True
