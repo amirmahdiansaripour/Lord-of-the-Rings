@@ -1,4 +1,5 @@
 from tkinter.tix import CELL
+from turtle import width
 import pygame
 
 BLACK = (0,0,0)
@@ -30,16 +31,22 @@ class Cell:
         pygame.display.update()    
 
 class Screen:
-    def __init__(self):
+    def __init__(self, width, height):
         self.CELLS = []
+        self.WIDTH = int(width) * PIC_SIZE_Y
+        self.HEIGHT = int(height) * PIC_SIZE_X
+        self.SCREEN = pygame.display.set_mode((int(self.WIDTH), int(self.HEIGHT)))
+        pygame.init()
+        
 
     def initField(self):
-        self.NUM_OF_CELLS = 0
+        cellCounter = 0
         for x in range(0, self.WIDTH, PIC_SIZE_Y):
             for y in range(0, self.HEIGHT, PIC_SIZE_X):
-                cell = Cell(x, y, self.NUM_OF_CELLS, self.SCREEN)
+                cell = Cell(x, y, cellCounter, self.SCREEN)
                 self.CELLS.append(cell)
-                self.NUM_OF_CELLS += 1
+                cellCounter += 1
+
 
     def draw(self):
         for cell in self.CELLS:
@@ -53,6 +60,8 @@ class Screen:
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):
                 self.SCREEN.blit(ENEMY, point)
+        pygame.display.update()    
+
 
     def printIndices(self):
         for cell in self.CELLS:
@@ -73,23 +82,3 @@ class Screen:
             self.CELLS[int(place)].state = ENEMY_CELL
         self.SCREEN.fill(BLACK)               
         self.PLACES_DONE = True
-
-
-    def flow(self):
-        self.PLACES_DONE = False
-        pygame.init()
-        # numOfRows, numOfCols = input("Enter number of rows and columns: ").split()
-        numOfRows, numOfCols = 10, 15
-        self.WIDTH = int(numOfCols) * PIC_SIZE_Y
-        self.HEIGHT = int(numOfRows) * PIC_SIZE_X
-        self.SCREEN = pygame.display.set_mode((int(self.WIDTH), int(self.HEIGHT)))
-        self.initField()
-        while(True):
-            self.draw()
-            if(self.PLACES_DONE == False):
-                self.placePeices()
-            pygame.display.update()
-
-            
-screen = Screen()
-screen.flow()
