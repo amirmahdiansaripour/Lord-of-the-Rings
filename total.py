@@ -17,7 +17,7 @@ class Total:
             found = self.UX.run(self.table)
             if found == -1 or found == -2:
                 self.UI.draw(self.table)
-                # time.sleep(100)     
+                time.sleep(4)     
                 break
             self.UI.draw(self.table)
             self.table[found].gandalfHere = False

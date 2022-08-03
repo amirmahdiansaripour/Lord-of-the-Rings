@@ -65,6 +65,7 @@ class BFS(Logic):
         node = self.frontier.pop(0)
         self.explored[node] = True
 
+        table[node[0]].gandalfHere = True
         matchResult = self.goalTest(node, table)
         if matchResult == 1:
             return -2
@@ -86,6 +87,5 @@ class BFS(Logic):
         if(table[node[0]].Center[0] > 0 and table[node[0] - 10].state != 'e'):
             self.addToFrontier(node, table[node[0] - 10].state, -10)                                
             # print("L")
-        table[node[0]].gandalfHere = True
         return node[0]
             
