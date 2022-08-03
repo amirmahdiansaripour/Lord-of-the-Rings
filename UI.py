@@ -30,6 +30,8 @@ class Cell:
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
+        # self.screen.blit(self.font.render(str(self.Center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
+
         pygame.display.update()    
 
 
@@ -48,7 +50,7 @@ class Screen:
         for x in range(0, self.WIDTH, PIC_SIZE_Y):
             colCounter = 0
             for y in range(0, self.HEIGHT, PIC_SIZE_X):
-                cell = Cell(x, y, cellCounter, self.SCREEN, (rowCounter, cellCounter))
+                cell = Cell(x, y, cellCounter, self.SCREEN, (rowCounter, colCounter))
                 table.append(cell)
                 cellCounter += 1
                 colCounter += 1
@@ -57,8 +59,8 @@ class Screen:
 
     def draw(self, table):
         self.SCREEN.fill(BLACK)               
-        pygame.time.delay(1000)
-        self.printIndices(table)
+        pygame.time.delay(300)
+        # self.printIndices(table)
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)

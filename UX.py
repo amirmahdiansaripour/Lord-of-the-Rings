@@ -1,7 +1,9 @@
-
+import time
 class Logic:
-    def __init__(self, table):
+    def __init__(self, table, width, height):
         self.numberOfCells = len(table)
+        self.numberOfCols = width
+        self.numberOfRows = height
         self.startIndex, self.goalIndex, self.numOfAllies = self.findStartAndEndPositions(table)
         self.startState = (self.startIndex, 0)
         self.goalState = (self.goalIndex, self.numOfAllies)
@@ -25,7 +27,8 @@ class Logic:
     
     def goalTest(self, node, table):
         if node[0] == self.goalState[0]:
-            if  node[1] >= self.goalState[1]:
+            # print(str(node[1]) + str(self.goalState[1]))
+            if node[1] >= self.goalState[1]:
                 print("Find!!!!")
                 return 1
         elif table[node[0]].state == 'e':
@@ -35,7 +38,9 @@ class Logic:
             return 0
 
     def makeNewChild(self, node, char, offset):
-        if char == 'a':
+        if(char == 'a' and node[1] < self.numOfAllies):
+            # print("hi")
+            # print((node[0] + offset, node[1] + 1))
             return (node[0] + offset, node[1] + 1)
         else:
             return (node[0] + offset, node[1])
@@ -51,38 +56,36 @@ class Logic:
 
 
 class BFS(Logic):
-    def __init__(self, table):
-        super().__init__(table)
+    def __init__(self, table, width, height):
+        super().__init__(table, width, height)
         self.parent[self.startState] = -1
         self.frontier.append(self.startState)
 
     def run(self, table):
-        if(len(self.frontier) == 0):
-            print("Goal does not exist!")
+        node = self.frontier.pop(0)
+        self.explored[node] = True
+
+        matchResult = self.goalTest(node, table)
+        if matchResult == 1:
+            return -2
+        elif matchResult == -1:
             return -1
-
-        else:
-            node = self.frontier.pop(0)
-            self.explored[node] = True
-
-            matchResult = self.goalTest(node, table)
-            if matchResult == 1:
-                return -2
-            elif matchResult == -1:
-                return -1
+        # UP
+        if (table[node[0]].Center[1] > 0 and table[node[0] - 1].state != 'e'):
+            self.addToFrontier(node, table[node[0] - 1].state, -1)
+            # print("U")
+        # RIGHT
+        if(table[node[0]].Center[0] < self.numberOfCols - 1 and table[node[0] + 10].state != 'e'):
+            self.addToFrontier(node, table[node[0] + 10].state, 10)           
+            # print("R")     
+        # DOWN
+        if(table[node[0]].Center[1] < self.numberOfRows - 1 and table[node[0] + 1].state != 'e'):
+            self.addToFrontier(node, table[node[0] + 1].state, 1)                
+            # print("D")
+        # LEFT
+        if(table[node[0]].Center[0] > 0 and table[node[0] - 10].state != 'e'):
+            self.addToFrontier(node, table[node[0] - 10].state, -10)                                
+            # print("L")
+        table[node[0]].gandalfHere = True
+        return node[0]
             
-            if (node[0] - 1 in range(0, self.numberOfCells) and table[node[0] - 1].state != 'e'):
-                self.addToFrontier(node, table[node[0]].state, -1)
-
-            if(node[0] + 1 in range(0, self.numberOfCells) and table[node[0] + 1].state != 'e'):
-                self.addToFrontier(node, table[node[0]].state, 1)                
-
-            if(node[0] + 10 in range(0, self.numberOfCells) and table[node[0] + 10].state != 'e'):
-                self.addToFrontier(node, table[node[0]].state, 10)                
-
-            if(node[0] - 10 in range(0, self.numberOfCells) and table[node[0] - 10].state != 'e'):
-                self.addToFrontier(node, table[node[0]].state, -10)                                
-            
-            table[node[0]].gandalfHere = True
-            return node[0]
-                
