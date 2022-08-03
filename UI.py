@@ -14,16 +14,18 @@ ORDINARY_CELL = 'o'
 ALLY_CELL = 'a'
 ENEMY_CELL = 'e'
 CASTLE_CELL = 'c'
-GANDALF_CELL = 'g'
+GANDALF_INITIAL = 'gi'
 
 class Cell:
-    def __init__(self, x_, y_, index_, screen_):
+    def __init__(self, x_, y_, index_, screen_, point):
         self.x = x_
         self.y = y_
+        self.Center = point
         self.rect = pygame.Rect(self.x, self.y, PIC_SIZE_Y, PIC_SIZE_X)
         self.index = index_
         self.state = ORDINARY_CELL
         self.screen = screen_
+        self.gandalfHere = False
         self.font = pygame.font.SysFont('Arial', 18)
 
     def printIndex(self):
@@ -41,34 +43,45 @@ class Screen:
     def initField(self):
         table = []
         cellCounter = 0
+        rowCounter = 0
+        colCounter = 0
         for x in range(0, self.WIDTH, PIC_SIZE_Y):
+            colCounter = 0
             for y in range(0, self.HEIGHT, PIC_SIZE_X):
-                cell = Cell(x, y, cellCounter, self.SCREEN)
+                cell = Cell(x, y, cellCounter, self.SCREEN, (rowCounter, cellCounter))
                 table.append(cell)
                 cellCounter += 1
+                colCounter += 1
+            rowCounter += 1
         return table
 
     def draw(self, table):
         self.SCREEN.fill(BLACK)               
-        pygame.time.delay(300)
+        pygame.time.delay(1000)
+        self.printIndices(table)
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
-            if(cell.state == GANDALF_CELL):
-                self.SCREEN.blit(GANDALF, point)
-            elif(cell.state == ALLY_CELL):
+            if(cell.state == ALLY_CELL):
                 self.SCREEN.blit(ALLY, point)
             elif(cell.state == CASTLE_CELL):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):
                 self.SCREEN.blit(ENEMY, point)
+            if(cell.gandalfHere):
+                self.SCREEN.blit(GANDALF, point)
         pygame.display.update()    
 
-    def placePeices(self, table):
+    def printIndices(self, table):
         for cell in table:
+            pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             cell.printIndex()
+        
+
+    def placePeices(self, table):
+        self.printIndices(table)    
         placeOfGandalf = input("Enter gandalf place: ")
-        table[int(placeOfGandalf)].state = GANDALF_CELL
+        table[int(placeOfGandalf)].state = GANDALF_INITIAL
         placeOfCastle = input("Enter castle place: ")
         table[int(placeOfCastle)].state = CASTLE_CELL
         placesOfAllies = input("Enter places of allies: ").split()

@@ -1,5 +1,3 @@
-from ast import Return
-import copy
 
 class Logic:
     def __init__(self, table):
@@ -7,7 +5,6 @@ class Logic:
         self.startIndex, self.goalIndex, self.numOfAllies = self.findStartAndEndPositions(table)
         self.startState = (self.startIndex, 0)
         self.goalState = (self.goalIndex, self.numOfAllies)
-        self.prevState = dict()
         self.frontier = list()
         self.explored = dict()
         self.parent = dict()
@@ -18,7 +15,7 @@ class Logic:
         goalPosition = 0
         numOfAllies = 0
         for cell in table:
-            if cell.state == 'g':
+            if cell.state == 'gi':
                 startPosition = cell.index
             elif cell.state == 'c':
                 goalPosition = cell.index
@@ -26,26 +23,27 @@ class Logic:
                 numOfAllies += 1
         return startPosition, goalPosition, numOfAllies
     
-    def makeNewChild(self, node, char, offset):
-        if char == 'a':
-            return (node[0] + offset, node[1] + 1)
-        else:
-            return (node[0] + offset, node[1])
-    
     def goalTest(self, node, table):
-        if node == self.goalState:
-            print("Find!!!!")
-            return 1
+        if node[0] == self.goalState[0]:
+            if  node[1] >= self.goalState[1]:
+                print("Find!!!!")
+                return 1
         elif table[node[0]].state == 'e':
             print("Loose!!!!")
             return -1
         else:
             return 0
 
-    def addToFrontier(self, state, index, offset):
-        child = self.makeNewChild(child, state, offset)
+    def makeNewChild(self, node, char, offset):
+        if char == 'a':
+            return (node[0] + offset, node[1] + 1)
+        else:
+            return (node[0] + offset, node[1])
+    
+
+    def addToFrontier(self, node, state, offset):
+        child = self.makeNewChild(node, state, offset)
         if ((not child in self.frontier) and (not child in self.explored)):  
-            self.prevState[child] = (index, state) 
             self.frontier.append(child)
             
     
@@ -57,39 +55,34 @@ class BFS(Logic):
         super().__init__(table)
         self.parent[self.startState] = -1
         self.frontier.append(self.startState)
-        self.prevState[self.startState] = (self.startIndex, 'o')
 
     def run(self, table):
         if(len(self.frontier) == 0):
             print("Goal does not exist!")
-            return False
+            return -1
 
         else:
             node = self.frontier.pop(0)
-            prevState = self.prevState.get(node)
-            table[prevState[0]].state = prevState[1]
             self.explored[node] = True
 
             matchResult = self.goalTest(node, table)
             if matchResult == 1:
-                return True
+                return -2
             elif matchResult == -1:
-                return False
+                return -1
             
-            child = copy.deepcopy(node)
-
             if (node[0] - 1 in range(0, self.numberOfCells) and table[node[0] - 1].state != 'e'):
-                child = self.makeNewChild(child, table[node[0]].state, -1)
-                self.prevState[child] = (node[0], table[node[0]].state) 
-                self.frontier.append(child)
+                self.addToFrontier(node, table[node[0]].state, -1)
+
+            if(node[0] + 1 in range(0, self.numberOfCells) and table[node[0] + 1].state != 'e'):
+                self.addToFrontier(node, table[node[0]].state, 1)                
+
+            if(node[0] + 10 in range(0, self.numberOfCells) and table[node[0] + 10].state != 'e'):
+                self.addToFrontier(node, table[node[0]].state, 10)                
+
+            if(node[0] - 10 in range(0, self.numberOfCells) and table[node[0] - 10].state != 'e'):
+                self.addToFrontier(node, table[node[0]].state, -10)                                
             
-            # if(node[0] + 10 in range(0, self.numberOfCells) and table[node[0] + 10].state != 'e'):
-            #     child = self.makeNewChild(child, table[node[0]].state, 10)
-            #     self.prevState[child] = (node[0] - 1, table[node[0] - 1].state) 
-            #     self.frontier.append(child)
-            
-            table[node[0]].state = 'g'
-            
-            
-        return False
+            table[node[0]].gandalfHere = True
+            return node[0]
                 
