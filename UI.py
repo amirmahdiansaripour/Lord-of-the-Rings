@@ -4,14 +4,14 @@ import pygame
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 PIC_SIZE_X = 50
 PIC_SIZE_Y = 57
 GANDALF = pygame.image.load('gandalf.png')
-ALLY = pygame.image.load('ally.png')
 CASTLE = pygame.image.load('castle.png')
 ENEMY = pygame.image.load('enemy.png')
 ORDINARY_CELL = 'o'
-ALLY_CELL = 'a'
 ENEMY_CELL = 'e'
 CASTLE_CELL = 'c'
 GANDALF_INITIAL = 'gi'
@@ -27,12 +27,18 @@ class Cell:
         self.screen = screen_
         self.gandalfHere = False
         self.font = pygame.font.SysFont('Arial', 18)
+        self.inFrontier = False
+        self.inExplored = False
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         # self.screen.blit(self.font.render(str(self.Center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
-
         pygame.display.update()    
+
+    def printSetLabel(self, color, label):
+        pygame.draw.rect(self.screen, color, self.rect)
+        self.screen.blit(self.font.render(label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
+        pygame.display.update()
 
 
 class Screen:
@@ -59,14 +65,16 @@ class Screen:
 
     def draw(self, table):
         self.SCREEN.fill(BLACK)               
-        pygame.time.delay(300)
+        pygame.time.delay(400)
         # self.printIndices(table)
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
-            if(cell.state == ALLY_CELL):
-                self.SCREEN.blit(ALLY, point)
-            elif(cell.state == CASTLE_CELL):
+            if(cell.inFrontier):
+                cell.printSetLabel(RED, 'F')
+            # elif(cell.inExplored):
+            #     cell.printSetLabel(BLUE, 'E')
+            if(cell.state == CASTLE_CELL):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):
                 self.SCREEN.blit(ENEMY, point)
@@ -86,9 +94,6 @@ class Screen:
         table[int(placeOfGandalf)].state = GANDALF_INITIAL
         placeOfCastle = input("Enter castle place: ")
         table[int(placeOfCastle)].state = CASTLE_CELL
-        placesOfAllies = input("Enter places of allies: ").split()
-        for place in placesOfAllies:
-            table[int(place)].state = ALLY_CELL
         placesOfEnemies = input("Enter places of enemies: ").split()
         for place in placesOfEnemies:
             table[int(place)].state = ENEMY_CELL
