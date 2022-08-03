@@ -26,17 +26,20 @@ class Cell:
         self.state = ORDINARY_CELL
         self.screen = screen_
         self.font = pygame.font.SysFont('Arial', 18)
+
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         pygame.display.update()    
 
+
 class Screen:
     def __init__(self, width, height):
-        self.CELLS = []
+        pygame.init()
         self.WIDTH = int(width) * PIC_SIZE_Y
         self.HEIGHT = int(height) * PIC_SIZE_X
         self.SCREEN = pygame.display.set_mode((int(self.WIDTH), int(self.HEIGHT)))
-        pygame.init()
+        self.CELLS = []
+        self.initField()
         
 
     def initField(self):
