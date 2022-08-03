@@ -27,7 +27,7 @@ class Logic:
     def goalTest(self, node, table):
         if node[0] == self.goalState[0]:
             if node[1] >= self.goalState[1]:
-                print("Find!!!!")
+                print("Found!!!!")
                 return 1
         elif table[node[0]].state == 'e':
             print("Loose!!!!")
@@ -46,17 +46,25 @@ class Logic:
         child = self.makeNewChild(node, state, offset)
         if ((not child in self.frontier) and (not child in self.explored)):  
             self.frontier.append(child)
+            self.parent[child[0]] = node[0]
             return True
         return False
             
+    def findPath(self, pathList, index):
+        if self.parent.get(index) == -1:
+            return pathList
+        pathList.append(self.parent.get(index))
+        return self.findPath(pathList, self.parent.get(index))
     
+    def getPath(self):
+        return self.findPath([], self.goalIndex)
         
 
 
 class BFS(Logic):
     def __init__(self, table, width, height):
         super().__init__(table, width, height)
-        self.parent[self.startState] = -1
+        self.parent[self.startState[0]] = -1
         self.frontier.append(self.startState)
 
     def run(self, table):

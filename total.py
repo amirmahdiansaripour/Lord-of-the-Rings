@@ -3,7 +3,7 @@ import UX
 import time
 class Total:
     def __init__(self):
-        self.numOfRows, self.numOfCols = 7, 7
+        self.numOfRows, self.numOfCols = 10, 10
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
@@ -15,9 +15,12 @@ class Total:
                 self.UX = UX.BFS(self.table, self.numOfCols, self.numOfRows)
                 self.PLACES_DONE = True
             found = self.UX.run(self.table)
-            if found == -1 or found == -2:
-                self.UI.draw(self.table)
-                time.sleep(4)     
+            if found == -1:
+                break
+            elif found == -2:
+                path = self.UX.getPath()
+                self.UI.drawPath(self.table, path)
+                self.UI.delay(8000)     
                 break
             self.UI.draw(self.table)
             self.table[found].gandalfHere = False

@@ -29,6 +29,7 @@ class Cell:
         self.font = pygame.font.SysFont('Arial', 18)
         self.inFrontier = False
         self.inExplored = False
+        self.inPath = False
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
@@ -38,6 +39,8 @@ class Cell:
     def printSetLabel(self, color, label):
         pygame.draw.rect(self.screen, color, self.rect)
         self.screen.blit(self.font.render(label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
+        for i in range(1):
+            pygame.draw.rect(self.screen, WHITE, (self.x - i, self.y - i, PIC_SIZE_Y, PIC_SIZE_X), 1)
         pygame.display.update()
 
 
@@ -65,15 +68,15 @@ class Screen:
 
     def draw(self, table):
         self.SCREEN.fill(BLACK)               
-        pygame.time.delay(400)
+        self.delay(400)
         # self.printIndices(table)
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.inFrontier):
                 cell.printSetLabel(RED, 'F')
-            # elif(cell.inExplored):
-            #     cell.printSetLabel(BLUE, 'E')
+            elif(cell.inPath):
+                cell.printSetLabel(BLUE, '')
             if(cell.state == CASTLE_CELL):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):
@@ -82,11 +85,19 @@ class Screen:
                 self.SCREEN.blit(GANDALF, point)
         pygame.display.update()    
 
+    def delay(self, time):
+        pygame.time.delay(time)
+        
     def printIndices(self, table):
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             cell.printIndex()
         
+
+    def drawPath(self, table, path):
+        for index in path:
+            table[index].inPath = True
+        self.draw(table)
 
     def placePeices(self, table):
         self.printIndices(table)    
