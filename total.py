@@ -15,7 +15,9 @@ class Total:
                 self.UI.placePeices(self.table)
                 self.UX = UX.BFS(self.table)
                 self.PLACES_DONE = True
-            self.UX.run(self.table)
+            found = self.UX.run(self.table)
+            if found: 
+                break
 
 
 total = Total()
