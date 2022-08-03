@@ -49,6 +49,8 @@ class Screen:
         return table
 
     def draw(self, table):
+        self.SCREEN.fill(BLACK)               
+        pygame.time.delay(300)
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
@@ -75,5 +77,4 @@ class Screen:
         placesOfEnemies = input("Enter places of enemies: ").split()
         for place in placesOfEnemies:
             table[int(place)].state = ENEMY_CELL
-        self.SCREEN.fill(BLACK)               
         self.PLACES_DONE = True

@@ -1,4 +1,5 @@
 import UI
+import UX
 
 class Total:
     def __init__(self):
@@ -12,7 +13,10 @@ class Total:
             self.UI.draw(self.table)
             if(self.PLACES_DONE == False):
                 self.UI.placePeices(self.table)
+                self.UX = UX.BFS(self.table)
                 self.PLACES_DONE = True
+            self.UX.run(self.table)
+
 
 total = Total()
 total.flow()
