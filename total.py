@@ -1,5 +1,7 @@
 import UI
-import UX
+from BFS import BFS 
+from DFS import DFS 
+
 class Total:
     def __init__(self):
         self.numOfRows, self.numOfCols = 10, 10
@@ -13,7 +15,9 @@ class Total:
                 self.UI.placePeices(self.table)
                 algorithmToRun = input("Enter algorithm to run :")
                 if algorithmToRun == "BFS":
-                    self.UX = UX.BFS(self.table, self.numOfCols, self.numOfRows)
+                    self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
+                elif algorithmToRun == "DFS":
+                    self.UX = DFS(self.table, self.numOfCols, self.numOfRows)
                 self.PLACES_DONE = True
             found = self.UX.run(self.table)
             if found == -1:

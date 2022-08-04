@@ -95,8 +95,8 @@ class Screen:
         pygame.time.delay(time)
         
     def printIndices(self, table):
-        getEvent()
         for cell in table:
+            getEvent()
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             cell.printIndex()
 
