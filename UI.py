@@ -16,6 +16,11 @@ ENEMY_CELL = 'e'
 CASTLE_CELL = 'c'
 GANDALF_INITIAL = 'gi'
 
+def getEvent():
+        for event in pygame.event.get():
+            if event == pygame.QUIT:
+                pygame.quit()
+
 class Cell:
     def __init__(self, x_, y_, index_, screen_, point):
         self.x = x_
@@ -37,6 +42,7 @@ class Cell:
         pygame.display.update()    
 
     def printSetLabel(self, color, label):
+        getEvent()
         pygame.draw.rect(self.screen, color, self.rect)
         self.screen.blit(self.font.render(label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
         for i in range(1):
@@ -69,7 +75,7 @@ class Screen:
     def draw(self, table):
         self.SCREEN.fill(BLACK)               
         self.delay(400)
-        # self.printIndices(table)
+        getEvent()
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
@@ -89,10 +95,10 @@ class Screen:
         pygame.time.delay(time)
         
     def printIndices(self, table):
+        getEvent()
         for cell in table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             cell.printIndex()
-        
 
     def drawPath(self, table, path):
         for index in path:

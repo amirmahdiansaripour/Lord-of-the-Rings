@@ -3,50 +3,39 @@ class Logic:
         self.numberOfCells = len(table)
         self.numberOfCols = width
         self.numberOfRows = height
-        self.startIndex, self.goalIndex, self.numOfAllies = self.findStartAndEndPositions(table)
-        self.startState = (self.startIndex, 0)
-        self.goalState = (self.goalIndex, self.numOfAllies)
+        self.startState, self.goalState = self.findStartAndEndPositions(table)
         self.frontier = list()
         self.explored = list()
         self.parent = dict()
-        
+        self.parent[self.startState] = -1
+        self.frontier.append(self.startState)
 
+        
     def findStartAndEndPositions(self, table):
         startPosition = 0
         goalPosition = 0
-        numOfAllies = 0
         for cell in table:
             if cell.state == 'gi':
                 startPosition = cell.index
             elif cell.state == 'c':
                 goalPosition = cell.index
-            elif cell.state == 'a':
-                numOfAllies += 1
-        return startPosition, goalPosition, numOfAllies
+        return startPosition, goalPosition
     
-    def goalTest(self, node, table):
-        if node[0] == self.goalState[0]:
-            if node[1] >= self.goalState[1]:
-                print("Found!!!!")
-                return 1
-        elif table[node[0]].state == 'e':
-            print("Loose!!!!")
-            return -1
+    def goalTest(self, node):
+        if node == self.goalState:
+            print("Found!!!!")
+            return 1
         else:
             return 0
 
-    def makeNewChild(self, node, char, offset):
-        if(char == 'a' and node[1] < self.numOfAllies):
-            return (node[0] + offset, node[1] + 1)
-        else:
-            return (node[0] + offset, node[1])
-    
+    def makeNewChild(self, node, offset):
+        return node + offset
 
-    def addToFrontier(self, node, state, offset):
-        child = self.makeNewChild(node, state, offset)
+    def addToFrontier(self, node, offset):
+        child = self.makeNewChild(node, offset)
         if ((not child in self.frontier) and (not child in self.explored)):  
             self.frontier.append(child)
-            self.parent[child[0]] = node[0]
+            self.parent[child] = node
             return True
         return False
             
@@ -57,49 +46,47 @@ class Logic:
         return self.findPath(pathList, self.parent.get(index))
     
     def getPath(self):
-        return self.findPath([], self.goalIndex)
+        return self.findPath([], self.goalState)
         
 
 
 class BFS(Logic):
     def __init__(self, table, width, height):
         super().__init__(table, width, height)
-        self.parent[self.startState[0]] = -1
-        self.frontier.append(self.startState)
 
     def run(self, table):
         if len(self.frontier) == 0:
             print("Loose!!!!")
             return -1
         node = self.frontier.pop(0)
-        table[node[0]].inFrontier = False
-        table[node[0]].gandalfHere = True
-        table[node[0]].inExplored = True
+        table[node].inFrontier = False
+        table[node].gandalfHere = True
+        table[node].inExplored = True
         self.explored.append(node)
-        matchResult = self.goalTest(node, table)
+        matchResult = self.goalTest(node)
         if matchResult == 1:
             return -2
         elif matchResult == -1:
             return -1
         # UP
-        if (table[node[0]].Center[1] > 0 and node[0] - 1 >= 0 and table[node[0] - 1].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, table[node[0] - 1].state, -1)
+        if (table[node].Center[1] > 0 and node - 1 >= 0 and table[node - 1].state != 'e'):
+            addedToFrontier = self.addToFrontier(node, -1)
             if addedToFrontier:
-                table[node[0] - 1].inFrontier = True
+                table[node - 1].inFrontier = True
         # RIGHT
-        if(table[node[0]].Center[0] < self.numberOfCols - 1 and node[0] + self.numberOfRows < self.numberOfCells and table[node[0] + self.numberOfRows].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, table[node[0] + self.numberOfRows].state, self.numberOfRows)           
+        if(table[node].Center[0] < self.numberOfCols - 1 and node + self.numberOfRows < self.numberOfCells and table[node + self.numberOfRows].state != 'e'):
+            addedToFrontier = self.addToFrontier(node, self.numberOfRows)           
             if addedToFrontier:
-                table[node[0] + self.numberOfRows].inFrontier = True
+                table[node + self.numberOfRows].inFrontier = True
         # DOWN
-        if(table[node[0]].Center[1] < self.numberOfRows - 1 and node[0] + 1 < self.numberOfCells and table[node[0] + 1].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, table[node[0] + 1].state, 1)                
+        if(table[node].Center[1] < self.numberOfRows - 1 and node + 1 < self.numberOfCells and table[node + 1].state != 'e'):
+            addedToFrontier = self.addToFrontier(node, 1)                
             if addedToFrontier:
-                table[node[0] + 1].inFrontier = True
+                table[node + 1].inFrontier = True
         # LEFT
-        if(table[node[0]].Center[0] > 0 and node[0] - self.numberOfRows >= 0 and table[node[0] - self.numberOfRows].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, table[node[0] - self.numberOfRows].state, -self.numberOfRows)                                
+        if(table[node].Center[0] > 0 and node - self.numberOfRows >= 0 and table[node - self.numberOfRows].state != 'e'):
+            addedToFrontier = self.addToFrontier(node, -self.numberOfRows)                                
             if addedToFrontier:
-                table[node[0] - self.numberOfRows].inFrontier = True
-        return node[0]
+                table[node - self.numberOfRows].inFrontier = True
+        return node
             
