@@ -35,6 +35,7 @@ class Cell:
         self.inFrontier = False
         self.inExplored = False
         self.inPath = False
+        self.inBorder = False
         self.stage = 0
 
     def printIndex(self):

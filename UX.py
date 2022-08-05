@@ -5,6 +5,8 @@ class State:
     def __init__(self, index, cost_ = 0):
         self.position = index
         self.cost = cost_
+
+
 class Logic:
     def __init__(self, table, width, height):
         self.table = table
@@ -28,8 +30,8 @@ class Logic:
             cell.inExplored = False    
     
     def findStartAndEndPositions(self, table):
-        startPosition = 0
-        goalPosition = 0
+        startPosition = -1
+        goalPosition = -1
         for cell in table:
             if cell.state == 'gi':
                 startPosition = cell.index
@@ -42,8 +44,8 @@ class Logic:
             print("Found!!!!")
             return 1
         else:
-            return 0
-
+            return None
+        
     def makeNewChild(self, state, offset, cost = 0):
         return State(state.position + offset, cost)
         # return node + offset
@@ -67,22 +69,22 @@ class Logic:
         return self.findPath([], self.goalState.position)
         
     def checkUP(self, node):
-        if (self.table[node].Center[1] > 0 and node - 1 >= 0 and self.table[node - 1].state != 'e'):
+        if (node - 1 >= 0 and self.table[node].Center[1] > 0 and self.table[node - 1].state != 'e'):
             return True
         return False
 
     def checkRight(self, node):
         # print("center: " + str(self.table[node].Center[0]))
-        if(self.table[node].Center[0] < self.numberOfCols - 1 and node + self.numberOfRows < self.numberOfCells and self.table[node + self.numberOfRows].state != 'e'):
+        if(node + self.numberOfRows < self.numberOfCells and self.table[node].Center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e'):
             return True
         return False
 
     def checkDown(self, node):
-        if(self.table[node].Center[1] < self.numberOfRows - 1 and node + 1 < self.numberOfCells and self.table[node + 1].state != 'e'):
+        if(node + 1 < self.numberOfCells and self.table[node].Center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e'):
             return True
         return False
 
     def checkLeft(self, node):
-        if(self.table[node].Center[0] > 0 and node - self.numberOfRows >= 0 and self.table[node - self.numberOfRows].state != 'e'):
+        if(node - self.numberOfRows >= 0 and self.table[node].Center[0] > 0 and self.table[node - self.numberOfRows].state != 'e'):
             return True
         return False

@@ -1,11 +1,12 @@
 import UI
 from BFS import BFS 
 from DFS import DFS 
+from IDS import IDS
 import math
 
 class Total:
     def __init__(self):
-        self.numOfRows, self.numOfCols = 10, 10
+        self.numOfRows, self.numOfCols = 8, 10
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
@@ -16,6 +17,9 @@ class Total:
             self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
         elif algorithmToRun == "DFS":
             self.UX = DFS(self.table, self.numOfCols, self.numOfRows, math.inf)
+        elif algorithmToRun == "IDS":
+            maxDepth = 50
+            self.UX = IDS(self.table, self.numOfCols, self.numOfRows, maxDepth)
         self.PLACES_DONE = True
 
     def flow(self):        
@@ -25,7 +29,6 @@ class Total:
                 self.getInput()
             found = self.UX.run()
             if found == -1:
-                self.UI.delay(20000) 
                 break
             elif found == -2:
                 path = self.UX.getPath()

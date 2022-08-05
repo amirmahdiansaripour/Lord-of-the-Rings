@@ -3,13 +3,11 @@ from UX import Logic
 from UX import State
 
 class DFS(Logic):
-    def __init__(self, table, width, height, maxDepth):
+    def __init__(self, table, width, height):
         super().__init__(table, width, height)
         self.frontier.append(self.startState)
         self.nodeToExplore = self.startState
-        self.maxDepth = maxDepth
-        self.currentDepth = 0
-
+        
     def action(self, position, offset):
             child = self.makeNewChild(self.nodeToExplore, offset)
             addedToFrontier = self.addToFrontier(child, self.nodeToExplore)
@@ -22,10 +20,6 @@ class DFS(Logic):
 
 
     def DFSRun(self):
-        if self.currentDepth == self.maxDepth:
-            return -1
-        self.currentDepth += 1
-        
         position = self.nodeToExplore.position
         self.table[position].inFrontier = False
         self.table[position].inExplored = True
