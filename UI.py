@@ -6,6 +6,7 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
 PIC_SIZE_X = 50
 PIC_SIZE_Y = 57
 GANDALF = pygame.image.load('gandalf.png')
@@ -25,7 +26,7 @@ class Cell:
     def __init__(self, x_, y_, index_, screen_, point):
         self.x = x_
         self.y = y_
-        self.Center = point
+        self.center = point
         self.rect = pygame.Rect(self.x, self.y, PIC_SIZE_Y, PIC_SIZE_X)
         self.index = index_
         self.state = ORDINARY_CELL
@@ -35,15 +36,16 @@ class Cell:
         self.inFrontier = False
         self.inExplored = False
         self.inPath = False
+        self.dontEnter = False
         self.inBorder = False
         self.stage = 0
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
-        # self.screen.blit(self.font.render(str(self.Center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
+        # self.screen.blit(self.font.render(str(self.center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         pygame.display.update()    
 
-    def printSetLabel(self, color, label):
+    def printSetLabel(self, color, label = ''):
         getEvent()
         pygame.draw.rect(self.screen, color, self.rect)
         self.screen.blit(self.font.render(label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
@@ -77,6 +79,7 @@ class Screen:
     def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(400)
+        self.printIndices()
         getEvent()
         for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
@@ -84,9 +87,11 @@ class Screen:
             if(cell.inFrontier):
                 cell.printSetLabel(RED, 'F')
             elif(cell.inExplored):
-                cell.printSetLabel(BLUE, '')
+                cell.printSetLabel(BLUE)
             elif(cell.inPath):
                 cell.printSetLabel(BLUE, str(cell.stage))
+            elif(cell.inBorder):
+                cell.printSetLabel(GREEN)
             if(cell.state == CASTLE_CELL):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):

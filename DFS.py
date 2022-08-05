@@ -7,7 +7,7 @@ class DFS(Logic):
         super().__init__(table, width, height)
         self.frontier.append(self.startState)
         self.nodeToExplore = self.startState
-        
+
     def action(self, position, offset):
             child = self.makeNewChild(self.nodeToExplore, offset)
             addedToFrontier = self.addToFrontier(child, self.nodeToExplore)
@@ -21,6 +21,8 @@ class DFS(Logic):
 
     def DFSRun(self):
         position = self.nodeToExplore.position
+        if self.table[position].dontEnter == True:
+            return -1
         self.table[position].inFrontier = False
         self.table[position].inExplored = True
         self.table[position].gandalfHere = True
@@ -56,19 +58,19 @@ class DFS(Logic):
     def findAnotherWay(self, node, latestStage):
         if(node == -1):
             return -1
-        if (self.checkUP(node) and self.table[node - 1].inExplored == False):
+        if (self.checkUP(node) and self.table[node - 1].inExplored == False and self.table[node - 1].dontEnter == False):
             self.parent[node - 1] = latestStage
             return self.makeNewChild(State(node), -1)
 
-        if(self.checkRight(node) and self.table[node + self.numberOfRows].inExplored == False):
+        if(self.checkRight(node) and self.table[node + self.numberOfRows].inExplored == False and self.table[node + self.numberOfRows].dontEnter == False):
             self.parent[node + self.numberOfRows] = latestStage
             return self.makeNewChild(State(node), self.numberOfRows)
 
-        if(self.checkDown(node) and self.table[node + 1].inExplored == False):
+        if(self.checkDown(node) and self.table[node + 1].inExplored == False and self.table[node + 1].dontEnter == False):
             self.parent[node + 1] = latestStage
             return self.makeNewChild(State(node), 1)
 
-        if(self.checkLeft(node) and self.table[node - self.numberOfRows].inExplored == False):
+        if(self.checkLeft(node) and self.table[node - self.numberOfRows].inExplored == False and self.table[node - self.numberOfRows].dontEnter == False):
             self.parent[node - self.numberOfRows] = latestStage
             return self.makeNewChild(State(node), -self.numberOfRows)
         
@@ -80,7 +82,6 @@ class DFS(Logic):
             self.table[self.nodeToExplore.position].gandalfHere = False
             anotherWay = self.findAnotherWay(self.nodeToExplore.position, self.nodeToExplore.position) 
             if anotherWay == -1:
-                print("Loose !!!!")
                 return -1    
             self.nodeToExplore = anotherWay
             return anotherWay.position

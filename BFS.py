@@ -19,7 +19,6 @@ class BFS(Logic):
 
     def run(self):
         if len(self.frontier) == 0:
-            print("Loose!!!!")
             return -1
         node = self.frontier.pop(0)
         node = State(node[0], node[1])

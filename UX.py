@@ -69,22 +69,22 @@ class Logic:
         return self.findPath([], self.goalState.position)
         
     def checkUP(self, node):
-        if (node - 1 >= 0 and self.table[node].Center[1] > 0 and self.table[node - 1].state != 'e'):
+        if (node - 1 >= 0 and self.table[node].center[1] > 0 and self.table[node - 1].state != 'e'):
             return True
         return False
 
     def checkRight(self, node):
-        # print("center: " + str(self.table[node].Center[0]))
-        if(node + self.numberOfRows < self.numberOfCells and self.table[node].Center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e'):
+        # print("center: " + str(self.table[node].center[0]))
+        if(node + self.numberOfRows < self.numberOfCells and self.table[node].center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e'):
             return True
         return False
 
     def checkDown(self, node):
-        if(node + 1 < self.numberOfCells and self.table[node].Center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e'):
+        if(node + 1 < self.numberOfCells and self.table[node].center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e'):
             return True
         return False
 
     def checkLeft(self, node):
-        if(node - self.numberOfRows >= 0 and self.table[node].Center[0] > 0 and self.table[node - self.numberOfRows].state != 'e'):
+        if(node - self.numberOfRows >= 0 and self.table[node].center[0] > 0 and self.table[node - self.numberOfRows].state != 'e'):
             return True
         return False

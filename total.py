@@ -18,8 +18,8 @@ class Total:
         elif algorithmToRun == "DFS":
             self.UX = DFS(self.table, self.numOfCols, self.numOfRows, math.inf)
         elif algorithmToRun == "IDS":
-            maxDepth = 50
-            self.UX = IDS(self.table, self.numOfCols, self.numOfRows, maxDepth)
+            maxDepth = input("Enter max depth of IDS: ")
+            self.UX = IDS(self.table, self.numOfCols, self.numOfRows, int(maxDepth))
         self.PLACES_DONE = True
 
     def flow(self):        
@@ -29,6 +29,7 @@ class Total:
                 self.getInput()
             found = self.UX.run()
             if found == -1:
+                print("Loose!!!!")
                 break
             elif found == -2:
                 path = self.UX.getPath()
