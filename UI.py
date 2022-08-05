@@ -35,6 +35,7 @@ class Cell:
         self.inFrontier = False
         self.inExplored = False
         self.inPath = False
+        self.stage = 0
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
@@ -76,14 +77,13 @@ class Screen:
         self.SCREEN.fill(BLACK)               
         self.delay(400)
         getEvent()
-        self.printIndices()
         for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.inFrontier):
                 cell.printSetLabel(RED, 'F')
             elif(cell.inPath):
-                cell.printSetLabel(BLUE, '')
+                cell.printSetLabel(BLUE, str(cell.stage))
             if(cell.state == CASTLE_CELL):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):
@@ -102,8 +102,11 @@ class Screen:
             cell.printIndex()
 
     def drawPath(self, path):
-        for index in path:
-            self.table[index].inPath = True
+        counter = len(path)
+        for stage in path:
+            self.table[stage].inPath = True
+            self.table[stage].stage = counter
+            counter -= 1
         self.draw()
 
     def placePeices(self):

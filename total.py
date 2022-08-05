@@ -25,7 +25,7 @@ class Total:
             elif found == -2:
                 path = self.UX.getPath()
                 self.UI.drawPath(path)
-                self.UI.delay(8000)     
+                self.UI.delay(20000)     
                 break
             self.UI.draw()
             self.table[found].gandalfHere = False
