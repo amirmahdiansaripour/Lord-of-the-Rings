@@ -17,22 +17,22 @@ class BFS(Logic):
         if matchResult == 1:
             return -2
         # UP
-        if (table[node].Center[1] > 0 and node - 1 >= 0 and table[node - 1].state != 'e'):
+        if (self.checkUP(node, table)):
             addedToFrontier = self.addToFrontier(node, -1)
             if addedToFrontier:
                 table[node - 1].inFrontier = True
         # RIGHT
-        if(table[node].Center[0] < self.numberOfCols - 1 and node + self.numberOfRows < self.numberOfCells and table[node + self.numberOfRows].state != 'e'):
+        if(self.checkRight(node, table)):
             addedToFrontier = self.addToFrontier(node, self.numberOfRows)           
             if addedToFrontier:
                 table[node + self.numberOfRows].inFrontier = True
         # DOWN
-        if(table[node].Center[1] < self.numberOfRows - 1 and node + 1 < self.numberOfCells and table[node + 1].state != 'e'):
+        if(self.checkDown(node, table)):
             addedToFrontier = self.addToFrontier(node, 1)                
             if addedToFrontier:
                 table[node + 1].inFrontier = True
         # LEFT
-        if(table[node].Center[0] > 0 and node - self.numberOfRows >= 0 and table[node - self.numberOfRows].state != 'e'):
+        if(self.checkLeft(node, table)):
             addedToFrontier = self.addToFrontier(node, -self.numberOfRows)                                
             if addedToFrontier:
                 table[node - self.numberOfRows].inFrontier = True

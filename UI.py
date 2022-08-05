@@ -58,7 +58,7 @@ class Screen:
         self.SCREEN = pygame.display.set_mode((int(self.WIDTH), int(self.HEIGHT)))
         
     def initField(self):
-        table = []
+        self.table = []
         cellCounter = 0
         rowCounter = 0
         colCounter = 0
@@ -66,17 +66,18 @@ class Screen:
             colCounter = 0
             for y in range(0, self.HEIGHT, PIC_SIZE_X):
                 cell = Cell(x, y, cellCounter, self.SCREEN, (rowCounter, colCounter))
-                table.append(cell)
+                self.table.append(cell)
                 cellCounter += 1
                 colCounter += 1
             rowCounter += 1
-        return table
+        return self.table
 
-    def draw(self, table):
+    def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(400)
         getEvent()
-        for cell in table:
+        self.printIndices()
+        for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.inFrontier):
@@ -94,24 +95,24 @@ class Screen:
     def delay(self, time):
         pygame.time.delay(time)
         
-    def printIndices(self, table):
-        for cell in table:
+    def printIndices(self):
+        for cell in self.table:
             getEvent()
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             cell.printIndex()
 
-    def drawPath(self, table, path):
+    def drawPath(self, path):
         for index in path:
-            table[index].inPath = True
-        self.draw(table)
+            self.table[index].inPath = True
+        self.draw()
 
-    def placePeices(self, table):
-        self.printIndices(table)    
+    def placePeices(self):
+        self.printIndices()    
         placeOfGandalf = input("Enter gandalf place: ")
-        table[int(placeOfGandalf)].state = GANDALF_INITIAL
+        self.table[int(placeOfGandalf)].state = GANDALF_INITIAL
         placeOfCastle = input("Enter castle place: ")
-        table[int(placeOfCastle)].state = CASTLE_CELL
+        self.table[int(placeOfCastle)].state = CASTLE_CELL
         placesOfEnemies = input("Enter places of enemies: ").split()
         for place in placesOfEnemies:
-            table[int(place)].state = ENEMY_CELL
+            self.table[int(place)].state = ENEMY_CELL
         self.PLACES_DONE = True

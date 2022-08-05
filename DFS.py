@@ -1,3 +1,4 @@
+from turtle import pos
 from UX import Logic
 
 class DFS(Logic):
@@ -5,51 +6,40 @@ class DFS(Logic):
         super().__init__(table, width, height)
         self.nodeToExplore = self.startState
 
-    def DFSRun(self, node, table):
-        table[node].inFrontier = False
-        table[node].inExplored = True
-        table[node].gandalfHere = True
+
+    def action(self, position, offset):
+            child = self.makeNewChild(self.nodeToExplore, offset)
+            addedToFrontier = self.addToFrontier(child, self.nodeToExplore, offset)
+            if addedToFrontier:
+                self.table[position + offset].inFrontier = True
+                self.nodeToExplore = child
+                return position
+
+
+    def DFSRun(self, node):
+        position = node.position
+        self.table[position].inFrontier = False
+        self.table[position].inExplored = True
+        self.table[position].gandalfHere = True
         self.explored.append(node)
         matchResult = self.goalTest(node)
         
         if matchResult == 1:
-            table[self.nodeToExplore].gandalfHere = True 
+            self.table[self.nodeToExplore].gandalfHere = True 
             return -2
-        #UP
-        if (table[node].Center[1] > 0 and node - 1 >= 0 and table[node - 1].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, -1)
-            if addedToFrontier:
-                # table[node - 1].inFrontier = True
-                # table[node - 1].gandalfHere = True 
-                self.nodeToExplore = node - 1
-                return node
-        #RIGHT
-        if(table[node].Center[0] < self.numberOfCols - 1 and node + self.numberOfRows < self.numberOfCells and table[node + self.numberOfRows].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, self.numberOfRows)           
-            if addedToFrontier:
-                # table[node + self.numberOfRows].inFrontier = True
-                # table[node + self.numberOfRows].gandalfHere = True
-                self.nodeToExplore = node + self.numberOfRows
-                return node
+
+        if (self.checkUP(position)):
+            return self.action(position, -1)
         
-        #DOWN
-        if(table[node].Center[1] < self.numberOfRows - 1 and node + 1 < self.numberOfCells and table[node + 1].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, 1)                
-            if addedToFrontier:
-                # table[node + 1].inFrontier = True
-                # table[node + 1].gandalfHere = True
-                self.nodeToExplore = node + 1
-                return node
+        if(self.checkRight(position)):
+            return self.action(position, self.numberOfRows)
+
+        if(self.checkDown(position)):
+            return self.action(position, 1)        
         
-        #LEFT
-        if(table[node].Center[0] > 0 and node - self.numberOfRows >= 0 and table[node - self.numberOfRows].state != 'e'):
-            addedToFrontier = self.addToFrontier(node, -self.numberOfRows)                                
-            if addedToFrontier:
-                # table[node - self.numberOfRows].inFrontier = True
-                # table[node - self.numberOfRows].gandalfHere = True
-                self.nodeToExplore = node - self.numberOfRows
-                return node
-        
+        if(self.checkLeft(position)):
+            return self.action(position, -self.numberOfRows)
+
         return -1
 
     def allNodesExpanded(self, table):
@@ -59,12 +49,34 @@ class DFS(Logic):
         return True
         
 
-    def run(self, table):
-        res = self.DFSRun(self.nodeToExplore, table)
-        if res == -1:
-            if self.allNodesExpanded(table):
-                print("Loose !!!!")
-                return -1    
-            self.nodeToExplore = self.startState
-            return self.nodeToExplore
+    def anotherChild(self, table):
+        if (self.checkUP(self.startState.position, table)):
+            if(table[self.startState.position - 1].inExplored == False):
+                return self.startState.position - 1
+
+        if(self.checkRight(self.startState.position, table)):
+            if(table[self.startState.position + self.numberOfRows].inExplored == False):
+                return self.startState.position + self.numberOfRows
+
+        if(self.checkLeft(self.startState.position, table)):
+            if(table[self.startState.position - self.numberOfRows].inExplored == False):
+                return self.startState.position - self.numberOfRows
+        
+        if(self.checkDown(self.startState.position, table)):
+            if(table[self.startState.position + 1].inExplored == False):
+                return self.startState.position + 1
+        
+        return -1
+
+    def run(self):
+        res = self.DFSRun(self.nodeToExplore)
+        # if res == -1:
+        #     anotherWay = self.anotherChild(table) 
+        #     if  anotherWay == -1:
+        #         print("Loose !!!!")
+        #         return -1    
+        #     table[self.nodeToExplore].gandalfHere = False
+        #     self.parent[anotherWay] = self.nodeToExplore
+        #     self.nodeToExplore = anotherWay
+        #     return self.nodeToExplore
         return res
