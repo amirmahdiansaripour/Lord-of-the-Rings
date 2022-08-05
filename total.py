@@ -1,6 +1,7 @@
 import UI
 from BFS import BFS 
 from DFS import DFS 
+import math
 
 class Total:
     def __init__(self):
@@ -14,7 +15,7 @@ class Total:
         if algorithmToRun == "BFS":
             self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
         elif algorithmToRun == "DFS":
-            self.UX = DFS(self.table, self.numOfCols, self.numOfRows)
+            self.UX = DFS(self.table, self.numOfCols, self.numOfRows, math.inf)
         self.PLACES_DONE = True
 
     def flow(self):        
