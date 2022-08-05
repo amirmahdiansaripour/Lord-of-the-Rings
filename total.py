@@ -8,17 +8,20 @@ class Total:
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
+    def getInput(self):
+        self.UI.placePeices()
+        algorithmToRun = input("Enter algorithm to run: ")
+        if algorithmToRun == "BFS":
+            self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
+        elif algorithmToRun == "DFS":
+            self.UX = DFS(self.table, self.numOfCols, self.numOfRows)
+        self.PLACES_DONE = True
+
     def flow(self):        
         self.PLACES_DONE = False
         while(True):
             if(self.PLACES_DONE == False):
-                self.UI.placePeices()
-                algorithmToRun = input("Enter algorithm to run :")
-                if algorithmToRun == "BFS":
-                    self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
-                elif algorithmToRun == "DFS":
-                    self.UX = DFS(self.table, self.numOfCols, self.numOfRows)
-                self.PLACES_DONE = True
+                self.getInput()
             found = self.UX.run()
             if found == -1:
                 break

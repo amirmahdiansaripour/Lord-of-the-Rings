@@ -18,8 +18,7 @@ class Logic:
         self.explored = list()
         self.parent = dict()
         self.parent[self.startState.position] = -1
-        self.frontier.append(self.startState)
-
+        
         
     def findStartAndEndPositions(self, table):
         startPosition = 0

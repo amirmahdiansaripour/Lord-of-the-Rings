@@ -4,6 +4,7 @@ from UX import Logic
 class DFS(Logic):
     def __init__(self, table, width, height):
         super().__init__(table, width, height)
+        self.frontier.append(self.startState)
         self.nodeToExplore = self.startState
 
 
