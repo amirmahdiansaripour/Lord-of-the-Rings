@@ -19,7 +19,14 @@ class Logic:
         self.parent = dict()
         self.parent[self.startState.position] = -1
         
-        
+    def clearFrontier(self):
+        for cell in self.table:
+            cell.inFrontier = False
+
+    def clearExplored(self):
+        for cell in self.table:
+            cell.inExplored = False    
+    
     def findStartAndEndPositions(self, table):
         startPosition = 0
         goalPosition = 0

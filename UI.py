@@ -82,6 +82,8 @@ class Screen:
             point = (cell.x, cell.y)
             if(cell.inFrontier):
                 cell.printSetLabel(RED, 'F')
+            elif(cell.inExplored):
+                cell.printSetLabel(BLUE, '')
             elif(cell.inPath):
                 cell.printSetLabel(BLUE, str(cell.stage))
             if(cell.state == CASTLE_CELL):

@@ -1,5 +1,6 @@
 from turtle import pos
 from UX import Logic
+from UX import State
 
 class DFS(Logic):
     def __init__(self, table, width, height):
@@ -60,34 +61,39 @@ class DFS(Logic):
         return True
         
 
-    def anotherChild(self):
-        if (self.checkUP(self.startState.position)):
-            if(self.table[self.startState.position - 1].inExplored == False):
-                return self.makeNewChild(self.startState, -1)
+    def anotherChild(self, node, latestStage):
+        if(node == -1):
+            return -1
+        if (self.checkUP(node)):
+            if(self.table[node - 1].inExplored == False):
+                self.parent[node - 1] = latestStage
+                return self.makeNewChild(State(node), -1)
 
-        if(self.checkRight(self.startState.position)):
-            if(self.table[self.startState.position + self.numberOfRows].inExplored == False):
-                return self.makeNewChild(self.startState, self.numberOfRows)
+        if(self.checkRight(node)):
+            if(self.table[node + self.numberOfRows].inExplored == False):
+                self.parent[node + self.numberOfRows] = latestStage
+                return self.makeNewChild(State(node), self.numberOfRows)
 
-        if(self.checkDown(self.startState.position)):
-            if(self.table[self.startState.position + 1].inExplored == False):
-                return self.makeNewChild(self.startState, 1)
+        if(self.checkDown(node)):
+            if(self.table[node + 1].inExplored == False):
+                self.parent[node + 1] = latestStage
+                return self.makeNewChild(State(node), 1)
 
-        if(self.checkLeft(self.startState.position)):
-            if(self.table[self.startState.position - self.numberOfRows].inExplored == False):
-                return self.makeNewChild(self.startState, -self.numberOfRows)
+        if(self.checkLeft(node)):
+            if(self.table[node - self.numberOfRows].inExplored == False):
+                self.parent[node - self.numberOfRows] = latestStage
+                return self.makeNewChild(State(node), -self.numberOfRows)
         
-        return -1
+        return self.anotherChild(self.parent[node], latestStage)
 
     def run(self):
         res = self.DFSRun(self.nodeToExplore)
         if res == -1:
-            anotherWay = self.anotherChild() 
-            if  anotherWay == -1:
+            anotherWay = self.anotherChild(self.nodeToExplore.position, self.nodeToExplore.position) 
+            if anotherWay == -1:
                 print("Loose !!!!")
                 return -1    
             self.table[self.nodeToExplore.position].gandalfHere = False
-            self.parent[anotherWay.position] = self.nodeToExplore.position
             self.nodeToExplore = anotherWay
             return self.nodeToExplore.position
         return res
