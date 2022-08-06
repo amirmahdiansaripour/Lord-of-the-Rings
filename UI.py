@@ -6,7 +6,7 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
+GREEN = (255, 0, 255)
 PIC_SIZE_X = 50
 PIC_SIZE_Y = 57
 GANDALF = pygame.image.load('gandalf.png')
@@ -39,16 +39,17 @@ class Cell:
         self.dontEnter = False
         self.inBorder = False
         self.stage = 0
+        self.label = ''
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         # self.screen.blit(self.font.render(str(self.center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         pygame.display.update()    
 
-    def printSetLabel(self, color, label = ''):
+    def printSetLabel(self, color):
         getEvent()
         pygame.draw.rect(self.screen, color, self.rect)
-        self.screen.blit(self.font.render(label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
+        self.screen.blit(self.font.render(self.label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
         for i in range(1):
             pygame.draw.rect(self.screen, WHITE, (self.x - i, self.y - i, PIC_SIZE_Y, PIC_SIZE_X), 1)
         pygame.display.update()
@@ -79,17 +80,19 @@ class Screen:
     def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(400)
-        self.printIndices()
         getEvent()
         for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.inFrontier):
-                cell.printSetLabel(RED, 'F')
+                cell.label = 'F'
+                cell.printSetLabel(RED)
             elif(cell.inExplored):
+                cell.label = ''
                 cell.printSetLabel(BLUE)
             elif(cell.inPath):
-                cell.printSetLabel(BLUE, str(cell.stage))
+                cell.label = str(cell.stage)
+                cell.printSetLabel(BLUE)
             elif(cell.inBorder):
                 cell.printSetLabel(GREEN)
             if(cell.state == CASTLE_CELL):
@@ -110,7 +113,7 @@ class Screen:
             cell.printIndex()
 
     def drawPath(self, path):
-        counter = len(path)
+        counter = len(path) - 1
         for stage in path:
             self.table[stage].inPath = True
             self.table[stage].stage = counter

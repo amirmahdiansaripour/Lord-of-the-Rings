@@ -50,11 +50,11 @@ class Logic:
         return State(state.position + offset, cost)
         # return node + offset
 
-    def addToFrontier(self, child, state):
+    def addToFrontier(self, child, parent):
         # child = self.makeNewChild(state, offset)
         if ((not (child.position, child.cost) in self.frontier) and (not (child.position, child.cost) in self.explored)):  
             self.frontier.append((child.position, child.cost))
-            self.parent[child.position] = state.position
+            self.parent[child.position] = parent.position
             return True
         return False
             
@@ -69,22 +69,22 @@ class Logic:
         return self.findPath([], self.goalState.position)
         
     def checkUP(self, node):
-        if (node - 1 >= 0 and self.table[node].center[1] > 0 and self.table[node - 1].state != 'e'):
+        if (node - 1 >= 0 and self.table[node].center[1] > 0 and self.table[node - 1].state != 'e' and self.table[node - 1].dontEnter == False):
             return True
         return False
 
     def checkRight(self, node):
         # print("center: " + str(self.table[node].center[0]))
-        if(node + self.numberOfRows < self.numberOfCells and self.table[node].center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e'):
+        if(node + self.numberOfRows < self.numberOfCells and self.table[node].center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e' and self.table[node + self.numberOfRows].dontEnter == False):
             return True
         return False
 
     def checkDown(self, node):
-        if(node + 1 < self.numberOfCells and self.table[node].center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e'):
+        if(node + 1 < self.numberOfCells and self.table[node].center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e' and self.table[node + 1].dontEnter == False):
             return True
         return False
 
     def checkLeft(self, node):
-        if(node - self.numberOfRows >= 0 and self.table[node].center[0] > 0 and self.table[node - self.numberOfRows].state != 'e'):
+        if(node - self.numberOfRows >= 0 and self.table[node].center[0] > 0 and self.table[node - self.numberOfRows].state != 'e' and self.table[node - self.numberOfRows].dontEnter == False):
             return True
         return False

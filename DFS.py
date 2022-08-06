@@ -14,15 +14,13 @@ class DFS(Logic):
             if addedToFrontier:
                 self.table[position + offset].inFrontier = True
                 self.nodeToExplore = child
-                return position
+                return True
             else:
-                return None 
+                return False 
 
 
     def DFSRun(self):
         position = self.nodeToExplore.position
-        if self.table[position].dontEnter == True:
-            return -1
         self.table[position].inFrontier = False
         self.table[position].inExplored = True
         self.table[position].gandalfHere = True
@@ -35,52 +33,52 @@ class DFS(Logic):
 
         if (self.checkUP(position)):
             nextPossible = self.action(position, -1)
-            if(nextPossible != None):
-                return nextPossible
+            if(nextPossible):
+                return position
         
         if(self.checkRight(position)):
             nextPossible = self.action(position, self.numberOfRows)
-            if(nextPossible != None):
-                return nextPossible    
+            if(nextPossible):
+                return position    
 
         if(self.checkDown(position)):
             nextPossible = self.action(position, 1)        
-            if(nextPossible != None):
-                return nextPossible
+            if(nextPossible):
+                return position
 
         if(self.checkLeft(position)):
             nextPossible = self.action(position, -self.numberOfRows)
-            if(nextPossible != None):
-                return nextPossible
+            if(nextPossible):
+                return position
         return -1
         
 
-    def findAnotherWay(self, node, latestStage):
+    def findAnotherWay(self, node):
         if(node == -1):
             return -1
-        if (self.checkUP(node) and self.table[node - 1].inExplored == False and self.table[node - 1].dontEnter == False):
-            self.parent[node - 1] = latestStage
+        if (self.checkUP(node) and self.table[node - 1].inExplored == False):
+            self.parent[node - 1] = node
             return self.makeNewChild(State(node), -1)
 
-        if(self.checkRight(node) and self.table[node + self.numberOfRows].inExplored == False and self.table[node + self.numberOfRows].dontEnter == False):
-            self.parent[node + self.numberOfRows] = latestStage
+        if(self.checkRight(node) and self.table[node + self.numberOfRows].inExplored == False):
+            self.parent[node + self.numberOfRows] = node
             return self.makeNewChild(State(node), self.numberOfRows)
 
-        if(self.checkDown(node) and self.table[node + 1].inExplored == False and self.table[node + 1].dontEnter == False):
-            self.parent[node + 1] = latestStage
+        if(self.checkDown(node) and self.table[node + 1].inExplored == False):
+            self.parent[node + 1] = node
             return self.makeNewChild(State(node), 1)
 
-        if(self.checkLeft(node) and self.table[node - self.numberOfRows].inExplored == False and self.table[node - self.numberOfRows].dontEnter == False):
-            self.parent[node - self.numberOfRows] = latestStage
+        if(self.checkLeft(node) and self.table[node - self.numberOfRows].inExplored == False):
+            self.parent[node - self.numberOfRows] = node
             return self.makeNewChild(State(node), -self.numberOfRows)
         
-        return self.findAnotherWay(self.parent[node], latestStage)
+        return self.findAnotherWay(self.parent[node])
 
     def run(self):
         nextStep = self.DFSRun()
         if nextStep == -1:
             self.table[self.nodeToExplore.position].gandalfHere = False
-            anotherWay = self.findAnotherWay(self.nodeToExplore.position, self.nodeToExplore.position) 
+            anotherWay = self.findAnotherWay(self.nodeToExplore.position) 
             if anotherWay == -1:
                 return -1    
             self.nodeToExplore = anotherWay
