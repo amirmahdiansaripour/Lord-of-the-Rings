@@ -74,6 +74,9 @@ class DFS(Logic):
         
         return self.findAnotherWay(self.parent[node])
 
+    def getLatestExploredNode(self):
+        return self.nodeToExplore.position
+
     def run(self):
         nextStep = self.DFSRun()
         if nextStep == -1:

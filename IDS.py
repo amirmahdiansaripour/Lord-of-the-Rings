@@ -8,6 +8,7 @@ class IDS(Logic):
         self.maxDepth = maxDepth
         self.currentDepth = 1
         self.makeBorderSet()
+        self.newDFS = False
         self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows)
         
     def calcManhattanDist(self, node):
@@ -26,16 +27,24 @@ class IDS(Logic):
         for cell in self.table:
             [cell.inFrontier, cell.inExplored, cell.inBorder, cell.dontEnter] = [False, False, False, False]
 
+    def makeNewDFS(self):
+        self.currentDepth += 1
+        self.clearBoard()
+        self.makeBorderSet()
+        self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows)
+        self.parent.clear()
+        self.parent = self.DFS.parent
+        self.newDFS = False
+
     def run(self):
+        if self.newDFS:
+            self.makeNewDFS()
         found = self.DFS.run()
         if found == -1:
             if self.currentDepth >= self.maxDepth:
                 return -1
-            self.currentDepth += 1
-            self.clearBoard()
-            self.makeBorderSet()
-            self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows)
-            self.parent.clear()
-            self.parent = self.DFS.parent
-            return self.startIndex
+            latestNode = self.DFS.getLatestExploredNode()
+            self.table[latestNode].inExplored = True
+            self.newDFS = True
+            return latestNode
         return found

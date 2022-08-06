@@ -80,6 +80,7 @@ class Screen:
     def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(400)
+        # self.printIndices()
         getEvent()
         for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
