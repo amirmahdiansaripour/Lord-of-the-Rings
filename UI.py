@@ -4,35 +4,55 @@ import pygame
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+GREEN = (255, 0, 255)
 PIC_SIZE_X = 50
 PIC_SIZE_Y = 57
 GANDALF = pygame.image.load('gandalf.png')
-ALLY = pygame.image.load('ally.png')
 CASTLE = pygame.image.load('castle.png')
 ENEMY = pygame.image.load('enemy.png')
 ORDINARY_CELL = 'o'
-ALLY_CELL = 'a'
 ENEMY_CELL = 'e'
 CASTLE_CELL = 'c'
 GANDALF_INITIAL = 'gi'
+
+def getEvent():
+        for event in pygame.event.get():
+            if event == pygame.QUIT:
+                pygame.quit()
 
 class Cell:
     def __init__(self, x_, y_, index_, screen_, point):
         self.x = x_
         self.y = y_
-        self.Center = point
+        self.center = point
         self.rect = pygame.Rect(self.x, self.y, PIC_SIZE_Y, PIC_SIZE_X)
         self.index = index_
         self.state = ORDINARY_CELL
         self.screen = screen_
         self.gandalfHere = False
         self.font = pygame.font.SysFont('Arial', 18)
+        self.inFrontier = False
+        self.inExplored = False
+        self.inPath = False
+        self.dontEnter = False
+        self.inBorder = False
+        self.stage = 0
+        self.label = ''
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
-        # self.screen.blit(self.font.render(str(self.Center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
-
+        # self.screen.blit(self.font.render(str(self.center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         pygame.display.update()    
+
+    def printSetLabel(self, color):
+        getEvent()
+        pygame.draw.rect(self.screen, color, self.rect)
+        self.screen.blit(self.font.render(self.label, True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))      
+        for i in range(1):
+            pygame.draw.rect(self.screen, WHITE, (self.x - i, self.y - i, PIC_SIZE_Y, PIC_SIZE_X), 1)
+        pygame.display.update()
 
 
 class Screen:
@@ -43,7 +63,7 @@ class Screen:
         self.SCREEN = pygame.display.set_mode((int(self.WIDTH), int(self.HEIGHT)))
         
     def initField(self):
-        table = []
+        self.table = []
         cellCounter = 0
         rowCounter = 0
         colCounter = 0
@@ -51,22 +71,32 @@ class Screen:
             colCounter = 0
             for y in range(0, self.HEIGHT, PIC_SIZE_X):
                 cell = Cell(x, y, cellCounter, self.SCREEN, (rowCounter, colCounter))
-                table.append(cell)
+                self.table.append(cell)
                 cellCounter += 1
                 colCounter += 1
             rowCounter += 1
-        return table
+        return self.table
 
-    def draw(self, table):
+    def draw(self):
         self.SCREEN.fill(BLACK)               
-        pygame.time.delay(300)
-        # self.printIndices(table)
-        for cell in table:
+        self.delay(400)
+        # self.printIndices()
+        getEvent()
+        for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
-            if(cell.state == ALLY_CELL):
-                self.SCREEN.blit(ALLY, point)
-            elif(cell.state == CASTLE_CELL):
+            if(cell.inFrontier):
+                cell.label = 'F'
+                cell.printSetLabel(RED)
+            elif(cell.inExplored):
+                cell.label = ''
+                cell.printSetLabel(BLUE)
+            elif(cell.inPath):
+                cell.label = str(cell.stage)
+                cell.printSetLabel(BLUE)
+            elif(cell.inBorder):
+                cell.printSetLabel(GREEN)
+            if(cell.state == CASTLE_CELL):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.state == ENEMY_CELL):
                 self.SCREEN.blit(ENEMY, point)
@@ -74,22 +104,30 @@ class Screen:
                 self.SCREEN.blit(GANDALF, point)
         pygame.display.update()    
 
-    def printIndices(self, table):
-        for cell in table:
+    def delay(self, time):
+        pygame.time.delay(time)
+        
+    def printIndices(self):
+        for cell in self.table:
+            getEvent()
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             cell.printIndex()
-        
 
-    def placePeices(self, table):
-        self.printIndices(table)    
+    def drawPath(self, path):
+        counter = len(path) - 1
+        for stage in path:
+            self.table[stage].inPath = True
+            self.table[stage].stage = counter
+            counter -= 1
+        self.draw()
+
+    def placePeices(self):
+        self.printIndices()    
         placeOfGandalf = input("Enter gandalf place: ")
-        table[int(placeOfGandalf)].state = GANDALF_INITIAL
+        self.table[int(placeOfGandalf)].state = GANDALF_INITIAL
         placeOfCastle = input("Enter castle place: ")
-        table[int(placeOfCastle)].state = CASTLE_CELL
-        placesOfAllies = input("Enter places of allies: ").split()
-        for place in placesOfAllies:
-            table[int(place)].state = ALLY_CELL
+        self.table[int(placeOfCastle)].state = CASTLE_CELL
         placesOfEnemies = input("Enter places of enemies: ").split()
         for place in placesOfEnemies:
-            table[int(place)].state = ENEMY_CELL
+            self.table[int(place)].state = ENEMY_CELL
         self.PLACES_DONE = True

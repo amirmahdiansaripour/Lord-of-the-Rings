@@ -1,91 +1,98 @@
-import time
+
+from tokenize import Triple
+
+class State:
+    def __init__(self, index, cost_ = 0):
+        self.position = index
+        self.cost = cost_
+
+
 class Logic:
     def __init__(self, table, width, height):
+        self.table = table
         self.numberOfCells = len(table)
         self.numberOfCols = width
         self.numberOfRows = height
-        self.startIndex, self.goalIndex, self.numOfAllies = self.findStartAndEndPositions(table)
-        self.startState = (self.startIndex, 0)
-        self.goalState = (self.goalIndex, self.numOfAllies)
+        self.startIndex, self.goalIndex = self.findStartAndEndPositions(table)
+        self.startState = State(self.startIndex)
+        self.goalState = State(self.goalIndex)
         self.frontier = list()
-        self.explored = dict()
+        self.explored = list()
         self.parent = dict()
+        self.parent[self.startState.position] = -1
         
+    def clearFrontier(self):
+        for cell in self.table:
+            cell.inFrontier = False
 
+    def clearExplored(self):
+        for cell in self.table:
+            cell.inExplored = False    
+    
     def findStartAndEndPositions(self, table):
-        startPosition = 0
-        goalPosition = 0
-        numOfAllies = 0
+        startPosition = -1
+        goalPosition = -1
         for cell in table:
             if cell.state == 'gi':
                 startPosition = cell.index
             elif cell.state == 'c':
                 goalPosition = cell.index
-            elif cell.state == 'a':
-                numOfAllies += 1
-        return startPosition, goalPosition, numOfAllies
+        return startPosition, goalPosition
     
-    def goalTest(self, node, table):
-        if node[0] == self.goalState[0]:
-            # print(str(node[1]) + str(self.goalState[1]))
-            if node[1] >= self.goalState[1]:
-                print("Find!!!!")
-                return 1
-        elif table[node[0]].state == 'e':
-            print("Loose!!!!")
-            return -1
-        else:
-            return 0
+    def preprocessNode(self, node):
+        position = node.position
+        self.table[position].inFrontier = False
+        self.table[position].gandalfHere = True
+        self.table[position].inExplored = True
+        self.explored.append((node.position, node.cost))
+        return self.goalTest(node)
 
-    def makeNewChild(self, node, char, offset):
-        if(char == 'a' and node[1] < self.numOfAllies):
-            # print("hi")
-            # print((node[0] + offset, node[1] + 1))
-            return (node[0] + offset, node[1] + 1)
+    def goalTest(self, state):
+        if state.position == self.goalState.position:
+            print("Found!!!!")
+            return 1
         else:
-            return (node[0] + offset, node[1])
-    
-
-    def addToFrontier(self, node, state, offset):
-        child = self.makeNewChild(node, state, offset)
-        if ((not child in self.frontier) and (not child in self.explored)):  
-            self.frontier.append(child)
-            
-    
+            return None
         
+    def makeNewChild(self, state, offset, cost = 0):
+        return State(state.position + offset, cost)
+        # return node + offset
 
-
-class BFS(Logic):
-    def __init__(self, table, width, height):
-        super().__init__(table, width, height)
-        self.parent[self.startState] = -1
-        self.frontier.append(self.startState)
-
-    def run(self, table):
-        node = self.frontier.pop(0)
-        self.explored[node] = True
-
-        table[node[0]].gandalfHere = True
-        matchResult = self.goalTest(node, table)
-        if matchResult == 1:
-            return -2
-        elif matchResult == -1:
-            return -1
-        # UP
-        if (table[node[0]].Center[1] > 0 and table[node[0] - 1].state != 'e'):
-            self.addToFrontier(node, table[node[0] - 1].state, -1)
-            # print("U")
-        # RIGHT
-        if(table[node[0]].Center[0] < self.numberOfCols - 1 and table[node[0] + 10].state != 'e'):
-            self.addToFrontier(node, table[node[0] + 10].state, 10)           
-            # print("R")     
-        # DOWN
-        if(table[node[0]].Center[1] < self.numberOfRows - 1 and table[node[0] + 1].state != 'e'):
-            self.addToFrontier(node, table[node[0] + 1].state, 1)                
-            # print("D")
-        # LEFT
-        if(table[node[0]].Center[0] > 0 and table[node[0] - 10].state != 'e'):
-            self.addToFrontier(node, table[node[0] - 10].state, -10)                                
-            # print("L")
-        return node[0]
+    def addToFrontier(self, child, parent):
+        # child = self.makeNewChild(state, offset)
+        if ((not (child.position, child.cost) in self.frontier) and (not (child.position, child.cost) in self.explored)):  
+            self.frontier.append((child.position, child.cost))
+            self.parent[child.position] = parent.position
+            return True
+        return False
             
+    def findPath(self, pathList, index):
+        # print("index: " + str(index))
+        if self.parent.get(index) == -1:
+            return pathList
+        pathList.append(self.parent.get(index))
+        return self.findPath(pathList, self.parent.get(index))
+    
+    def getPath(self):
+        return self.findPath([], self.goalState.position)
+        
+    def checkUP(self, node):
+        if (node - 1 >= 0 and self.table[node].center[1] > 0 and self.table[node - 1].state != 'e' and self.table[node - 1].dontEnter == False):
+            return True
+        return False
+
+    def checkRight(self, node):
+        # print("center: " + str(self.table[node].center[0]))
+        if(node + self.numberOfRows < self.numberOfCells and self.table[node].center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e' and self.table[node + self.numberOfRows].dontEnter == False):
+            return True
+        return False
+
+    def checkDown(self, node):
+        if(node + 1 < self.numberOfCells and self.table[node].center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e' and self.table[node + 1].dontEnter == False):
+            return True
+        return False
+
+    def checkLeft(self, node):
+        if(node - self.numberOfRows >= 0 and self.table[node].center[0] > 0 and self.table[node - self.numberOfRows].state != 'e' and self.table[node - self.numberOfRows].dontEnter == False):
+            return True
+        return False
