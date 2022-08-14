@@ -60,8 +60,7 @@ class Logic:
 
     def addToFrontier(self, child, parent):
         # child = self.makeNewChild(state, offset)
-        if ((not (child.position, child.cost) in self.frontier) and (not (child.position, child.cost) in self.explored)):  
-            self.frontier.append((child.position, child.cost))
+        if (self.table[child.position].inFrontier == False) and (self.table[child.position].inExplored == False):
             self.parent[child.position] = parent.position
             return True
         return False

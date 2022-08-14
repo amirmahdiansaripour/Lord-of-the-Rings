@@ -7,23 +7,32 @@ from UX import State
 class BFS(Logic):
     def __init__(self, table, width, height):
         super().__init__(table, width, height)
+        self.initFrontier()
+
+    def initFrontier(self):
         self.frontier.append((self.startState.position, self.startState.cost))
 
+    def pop(self):
+        return self.frontier.pop(0)
 
+    def push(self, child):
+        self.frontier.append((child.position, child.cost))
+        
     def action(self, node, offset):
         child = self.makeNewChild(node, offset)
         addedToFrontier = self.addToFrontier(child, node)
         if addedToFrontier:
+            self.push(child)
             self.table[node.position + offset].inFrontier = True
 
 
     def run(self):
         if len(self.frontier) == 0:
             return -1
-        node = self.frontier.pop(0)
+        node = self.pop()
         node = State(node[0], node[1])
         position = node.position
-        
+
         matchResult = self.preprocessNode(node)
         if matchResult == 1:
             return -2
