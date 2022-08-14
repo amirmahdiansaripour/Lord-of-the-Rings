@@ -23,11 +23,8 @@ class BFS(Logic):
         node = self.frontier.pop(0)
         node = State(node[0], node[1])
         position = node.position
-        self.table[position].inFrontier = False
-        self.table[position].gandalfHere = True
-        self.table[position].inExplored = True
-        self.explored.append((node.position, node.cost))
-        matchResult = self.goalTest(node)
+        
+        matchResult = self.preprocessNode(node)
         if matchResult == 1:
             return -2
 

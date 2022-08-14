@@ -39,6 +39,14 @@ class Logic:
                 goalPosition = cell.index
         return startPosition, goalPosition
     
+    def preprocessNode(self, node):
+        position = node.position
+        self.table[position].inFrontier = False
+        self.table[position].gandalfHere = True
+        self.table[position].inExplored = True
+        self.explored.append((node.position, node.cost))
+        return self.goalTest(node)
+
     def goalTest(self, state):
         if state.position == self.goalState.position:
             print("Found!!!!")

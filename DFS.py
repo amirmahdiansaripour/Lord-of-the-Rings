@@ -21,12 +21,7 @@ class DFS(Logic):
 
     def DFSRun(self):
         position = self.nodeToExplore.position
-        self.table[position].inFrontier = False
-        self.table[position].inExplored = True
-        self.table[position].gandalfHere = True
-        self.explored.append((self.nodeToExplore.position, self.nodeToExplore.cost))
-        matchResult = self.goalTest(self.nodeToExplore)
-        
+        matchResult = self.preprocessNode(self.nodeToExplore)
         if matchResult == 1:
             self.table[self.nodeToExplore.position].gandalfHere = True 
             return -2
