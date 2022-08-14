@@ -2,6 +2,7 @@ import UI
 from BFS import BFS 
 from DFS import DFS 
 from IDS import IDS
+from Astar import Astar 
 import math
 
 class Total:
@@ -20,6 +21,8 @@ class Total:
         elif algorithmToRun == "IDS":
             maxDepth = input("Enter max depth of IDS: ")
             self.UX = IDS(self.table, self.numOfCols, self.numOfRows, int(maxDepth))
+        elif algorithmToRun == "A*":
+            self.UX = Astar(self.table, self.numOfCols, self.numOfRows)
         self.PLACES_DONE = True
 
     def flow(self):        

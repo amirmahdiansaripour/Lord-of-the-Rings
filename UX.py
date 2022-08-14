@@ -54,11 +54,11 @@ class Logic:
         else:
             return None
         
-    def makeNewChild(self, state, offset, cost = 0):
-        return State(state.position + offset, cost)
+    def makeNewChild(self, parent, offset, cost = 0):
+        return State(parent.position + offset, cost)
         # return node + offset
 
-    def addToFrontier(self, child, parent):
+    def checkFrontierandExplore(self, child, parent):
         # child = self.makeNewChild(state, offset)
         if (self.table[child.position].inFrontier == False) and (self.table[child.position].inExplored == False):
             self.parent[child.position] = parent.position

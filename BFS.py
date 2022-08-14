@@ -7,9 +7,6 @@ from UX import State
 class BFS(Logic):
     def __init__(self, table, width, height):
         super().__init__(table, width, height)
-        self.initFrontier()
-
-    def initFrontier(self):
         self.frontier.append((self.startState.position, self.startState.cost))
 
     def pop(self):
@@ -17,10 +14,10 @@ class BFS(Logic):
 
     def push(self, child):
         self.frontier.append((child.position, child.cost))
-        
+
     def action(self, node, offset):
         child = self.makeNewChild(node, offset)
-        addedToFrontier = self.addToFrontier(child, node)
+        addedToFrontier = self.checkFrontierandExplore(child, node)
         if addedToFrontier:
             self.push(child)
             self.table[node.position + offset].inFrontier = True
