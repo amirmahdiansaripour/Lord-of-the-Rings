@@ -10,8 +10,9 @@ class DFS(Logic):
 
     def action(self, position, offset):
             child = self.makeNewChild(self.nodeToExplore, offset)
-            addedToFrontier = self.addToFrontier(child, self.nodeToExplore)
+            addedToFrontier = self.checkFrontierandExplore(child, self.nodeToExplore)
             if addedToFrontier:
+                self.frontier.append((child.position, child.cost))
                 self.table[position + offset].inFrontier = True
                 self.nodeToExplore = child
                 return True

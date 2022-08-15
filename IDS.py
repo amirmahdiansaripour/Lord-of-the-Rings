@@ -20,7 +20,7 @@ class IDS(Logic):
             if distance >= self.currentDepth + 1:
                 cell.dontEnter = True
             if distance == self.currentDepth + 1:
-                cell.label = str(self.currentDepth + 1)
+                cell.label = str(self.currentDepth)
                 cell.inBorder = True
 
     def clearBoard(self):
