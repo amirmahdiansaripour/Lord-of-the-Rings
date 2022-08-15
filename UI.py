@@ -18,8 +18,6 @@ def getEvent():
         for event in pygame.event.get():
             if event == pygame.QUIT:
                 pygame.quit()
-            else:
-                return event
 
 class Cell:
     def __init__(self, x_, y_, index_, screen_, point):
@@ -41,6 +39,7 @@ class Cell:
         self.placing = False
         self.stage = 0
         self.label = ''
+        self.gandalfInitPlace = False
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
@@ -100,12 +99,12 @@ class Screen:
             elif(cell.placing):
                 cell.printSetLabel(GREEN)
 
-            if(cell.castleHere):
+            if(cell.gandalfHere):
+                self.SCREEN.blit(GANDALF, point)
+            elif(cell.castleHere):
                 self.SCREEN.blit(CASTLE, point)
             elif(cell.enemyHere):
                 self.SCREEN.blit(ENEMY, point)
-            if(cell.gandalfHere):
-                self.SCREEN.blit(GANDALF, point)
         pygame.display.update()    
 
     def delay(self, time):
@@ -130,24 +129,28 @@ class Screen:
             return True
         return False
 
-    def place(self):
+    def placePieces(self):
         currentIndex = 9
         gandalfPlaced, castlePlaced = [False, False]
-        print("Place the pieces\nPress g to place Gandalf\nPress c to place castle\nPress e to place enemies\nPress f if you finished\n")
+        print("Place the pieces\nPress g to place Gandalf\nPress c to place castle\nPress e to place enemies\nPress f if you finished")
         global DELAY_TIME
         DELAY_TIME = 100
+        self.draw()
         while(True):
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if(event.key == pygame.K_f):
                         if(castlePlaced == True and gandalfPlaced == True):
                             DELAY_TIME = 400
+                            self.table[currentIndex].placing = False
+                            self.draw()
                             return
                         else:
                             print("Gandalf or the castle have not been placed yet!!")
 
                     if(event.key == pygame.K_g and gandalfPlaced == False and self.emptyCell(currentIndex)):
                         self.table[currentIndex].gandalfHere = True
+                        self.table[currentIndex].gandalfInitPlace = True 
                         gandalfPlaced = True
 
                     elif(event.key == pygame.K_c and castlePlaced == False and self.emptyCell(currentIndex)):
@@ -175,18 +178,3 @@ class Screen:
                     
                     self.table[currentIndex].placing = True
                     self.draw()
-
-        return
-
-    def placePeices(self):
-        self.printIndices()  
-        self.place()  
-        # self.table[0]
-        # placeOfGandalf = input("Enter gandalf place: ")
-        # self.table[int(placeOfGandalf)].state = GANDALF_INITIAL
-        # placeOfCastle = input("Enter castle place: ")
-        # self.table[int(placeOfCastle)].state = CASTLE_CELL
-        # placesOfEnemies = input("Enter places of enemies: ").split()
-        # for place in placesOfEnemies:
-        #     self.table[int(place)].state = ENEMY_CELL
-        # self.PLACES_DONE = True
