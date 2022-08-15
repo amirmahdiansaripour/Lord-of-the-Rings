@@ -43,8 +43,9 @@ class Total:
                 self.UI.drawPath(path)
                 self.UI.delay(20000)     
                 break
-            self.table[found].gandalfHere = False
             self.UI.draw()
+            self.table[found].gandalfHere = False
+            
             
 
 total = Total()
