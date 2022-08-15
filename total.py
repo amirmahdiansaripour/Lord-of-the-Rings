@@ -30,21 +30,22 @@ class Total:
         while(True):
             if(self.PLACES_DONE == False):
                 self.getInput()
-            found = self.UX.run()
-            if found == -1:
-                print("Loose!!!!")
-                self.UI.draw()
-                self.UI.delay(20000)
-                break
-            elif found == -2:
-                path = self.UX.getPath()
-                # self.UX.clearFrontier()
-                self.UX.clearExplored()
-                self.UI.drawPath(path)
-                self.UI.delay(20000)     
-                break
+            else:
+                found = self.UX.run()
+                if found == -1:
+                    print("Loose!!!!")
+                    self.UI.draw()
+                    self.UI.delay(20000)
+                    break
+                elif found == -2:
+                    path = self.UX.getPath()
+                    # self.UX.clearFrontier()
+                    self.UX.clearExplored()
+                    self.UI.drawPath(path)
+                    self.UI.delay(20000)     
+                    self.table[found].gandalfHere = False
+                    break
             self.UI.draw()
-            self.table[found].gandalfHere = False
             
 
 total = Total()
