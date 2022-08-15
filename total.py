@@ -12,7 +12,7 @@ class Total:
         self.table = self.UI.initField()
 
     def getInput(self):
-        self.UI.placePeices()
+        self.UI.placePieces()
         algorithmToRun = input("Enter algorithm to run: ")
         if algorithmToRun == "BFS":
             self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
@@ -45,6 +45,7 @@ class Total:
                 break
             self.UI.draw()
             self.table[found].gandalfHere = False
+            
             
 
 total = Total()
