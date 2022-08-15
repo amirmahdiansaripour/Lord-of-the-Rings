@@ -10,7 +10,9 @@ class BFS(Logic):
         self.frontier.append((self.startState.position, self.startState.cost))
 
     def pop(self):
-        return self.frontier.pop(0)
+        poppedNode = self.frontier.pop(0)
+        poppedNode = State(poppedNode[0], poppedNode[1])
+        return poppedNode
 
     def push(self, child):
         self.frontier.append((child.position, child.cost))
@@ -27,7 +29,6 @@ class BFS(Logic):
         if len(self.frontier) == 0:
             return -1
         node = self.pop()
-        node = State(node[0], node[1])
         position = node.position
 
         matchResult = self.preprocessNode(node)

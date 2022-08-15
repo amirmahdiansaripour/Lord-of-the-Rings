@@ -8,7 +8,7 @@ class Astar(BFS):
         super().__init__(table, width, height)
         self.alpha = int(alpha)
         self.frontier = []
-        heappush(self.frontier, (self.startIndex, 0 + self.hueristic(self.startIndex)))
+        heappush(self.frontier, (0 + self.hueristic(self.startIndex), self.startIndex))
 
     def hueristic(self, position):
         currX = int(self.table[position].x)
@@ -19,7 +19,10 @@ class Astar(BFS):
         return self.alpha * math.sqrt(squaredDistance)
 
     def pop(self):
-        return heappop(self.frontier)
+        poppedNode = heappop(self.frontier)
+        # print(poppedNode)
+        poppedNode = State(poppedNode[1], poppedNode[0])
+        return poppedNode
     
     def calcCostofNewState(self, parent, offset):
         realCost = parent.cost - self.hueristic(parent.position)
@@ -31,5 +34,5 @@ class Astar(BFS):
         return State(parent.position + offset, self.calcCostofNewState(parent, offset))
 
     def push(self, node):
-        heappush(self.frontier, (node.position, 0 + self.hueristic(node.position)))
+        heappush(self.frontier, (node.cost, node.position))
         
