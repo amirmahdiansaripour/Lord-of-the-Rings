@@ -13,7 +13,7 @@ class Logic:
         self.numberOfCells = len(table)
         self.numberOfCols = width
         self.numberOfRows = height
-        self.startIndex, self.goalIndex = self.findStartAndEndPositions(table)
+        self.startIndex, self.goalIndex = self.findStartAndEndPositions()
         self.startState = State(self.startIndex)
         self.goalState = State(self.goalIndex)
         self.frontier = list()
@@ -29,13 +29,13 @@ class Logic:
         for cell in self.table:
             cell.inExplored = False    
     
-    def findStartAndEndPositions(self, table):
+    def findStartAndEndPositions(self):
         startPosition = -1
         goalPosition = -1
-        for cell in table:
-            if cell.state == 'gi':
+        for cell in self.table:
+            if cell.gandalfInitPlace:
                 startPosition = cell.index
-            elif cell.state == 'c':
+            elif cell.castleHere:
                 goalPosition = cell.index
         return startPosition, goalPosition
     
@@ -76,22 +76,22 @@ class Logic:
         return self.findPath([], self.goalState.position)
         
     def checkUP(self, node):
-        if (node - 1 >= 0 and self.table[node].center[1] > 0 and self.table[node - 1].state != 'e' and self.table[node - 1].dontEnter == False):
+        if (node - 1 >= 0 and self.table[node].center[1] > 0 and self.table[node - 1].enemyHere == False and self.table[node - 1].dontEnter == False):
             return True
         return False
 
     def checkRight(self, node):
         # print("center: " + str(self.table[node].center[0]))
-        if(node + self.numberOfRows < self.numberOfCells and self.table[node].center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].state != 'e' and self.table[node + self.numberOfRows].dontEnter == False):
+        if(node + self.numberOfRows < self.numberOfCells and self.table[node].center[0] < self.numberOfCols - 1 and self.table[node + self.numberOfRows].enemyHere == False and self.table[node + self.numberOfRows].dontEnter == False):
             return True
         return False
 
     def checkDown(self, node):
-        if(node + 1 < self.numberOfCells and self.table[node].center[1] < self.numberOfRows - 1 and self.table[node + 1].state != 'e' and self.table[node + 1].dontEnter == False):
+        if(node + 1 < self.numberOfCells and self.table[node].center[1] < self.numberOfRows - 1 and self.table[node + 1].enemyHere == False and self.table[node + 1].dontEnter == False):
             return True
         return False
 
     def checkLeft(self, node):
-        if(node - self.numberOfRows >= 0 and self.table[node].center[0] > 0 and self.table[node - self.numberOfRows].state != 'e' and self.table[node - self.numberOfRows].dontEnter == False):
+        if(node - self.numberOfRows >= 0 and self.table[node].center[0] > 0 and self.table[node - self.numberOfRows].enemyHere == False and self.table[node - self.numberOfRows].dontEnter == False):
             return True
         return False
