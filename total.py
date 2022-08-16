@@ -7,7 +7,7 @@ import math
 
 class Total:
     def __init__(self):
-        self.numOfRows, self.numOfCols = 10, 10
+        self.numOfRows, self.numOfCols = 15, 20
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
@@ -35,6 +35,7 @@ class Total:
                 print("Loose!!!!")
                 self.UI.draw()
                 self.UI.delay(20000)
+                self.UI.quit()     
                 break
             elif found == -2:
                 path = self.UX.getPath()

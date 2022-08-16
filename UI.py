@@ -34,12 +34,12 @@ class Cell:
         self.inFrontier = False
         self.inExplored = False
         self.inPath = False
-        self.dontEnter = False
-        self.inBorder = False
         self.placing = False
         self.stage = 0
         self.label = ''
         self.gandalfInitPlace = False
+        self.cost = 0
+        self.repeatedState = False
 
     def printIndex(self):
         self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
@@ -78,29 +78,30 @@ class Screen:
         return self.table
 
     def quit(self):
-        pygame.quit()
+        # pygame.quit()
+        return
 
     def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(DELAY_TIME)
-        # self.printIndices()
+        self.printIndices()
         getEvent()
         for cell in self.table:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.inFrontier):
-                cell.label = 'F'
+                cell.label = str(cell.cost)
                 cell.printSetLabel(RED)
             elif(cell.inExplored):
-                cell.label = ''
+                cell.label = str(cell.cost)
                 cell.printSetLabel(BLUE)
             elif(cell.inPath):
                 cell.label = str(cell.stage)
                 cell.printSetLabel(BLUE)
-            elif(cell.inBorder):
-                cell.printSetLabel(PINK)
             elif(cell.placing):
-                cell.printSetLabel(GREEN)
+                cell.printSetLabel(PINK)
+            elif(cell.repeatedState):
+                cell.printSetLabel(PINK)
 
             if(cell.gandalfHere):
                 self.SCREEN.blit(GANDALF, point)
@@ -121,6 +122,13 @@ class Screen:
             counter -= 1
         self.draw()
 
+    def printIndices(self):
+        for cell in self.table:
+            getEvent()
+            pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
+            cell.printIndex()
+
+
     def emptyCell(self, index):
         if (self.table[index].gandalfHere == False and self.table[index].castleHere == False and self.table[index].enemyHere == False):
             return True
@@ -138,7 +146,7 @@ class Screen:
                 if event.type == pygame.KEYDOWN:
                     if(event.key == pygame.K_f):
                         if(castlePlaced == True and gandalfPlaced == True):
-                            DELAY_TIME = 400
+                            DELAY_TIME = 700
                             self.table[currentIndex].placing = False
                             self.draw()
                             return
