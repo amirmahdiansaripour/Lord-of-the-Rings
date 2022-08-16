@@ -93,6 +93,8 @@ class Screen:
                 cell.label = 'F'
                 cell.printSetLabel(RED)
             elif(cell.inExplored):
+                if cell.cost <= 0:
+                    cell.label = ''
                 cell.printSetLabel(BLUE)
             elif(cell.inPath):
                 cell.label = str(cell.stage)

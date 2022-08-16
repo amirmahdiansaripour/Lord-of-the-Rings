@@ -40,12 +40,13 @@ class DFS(Logic):
         position = self.nodeToExplore.position
         matchResult = self.preprocessNode(self.nodeToExplore)
         self.currentDepth += 1
-        if self.currentDepth == self.maxDepth:
-            return -1
         if matchResult == 1:
             self.table[self.nodeToExplore.position].gandalfHere = True 
             return -2
-
+        
+        if self.currentDepth == self.maxDepth:
+            return -1
+        
         # print("cur depth: " + str(self.currentDepth))
 
         if (self.checkUP(position)):
@@ -105,11 +106,11 @@ class DFS(Logic):
             self.table[self.nodeToExplore.position].cost = self.table[self.parent[self.nodeToExplore.position]].cost + 1
             pos = self.nodeToExplore.position
             anotherWay = self.findAnotherWay(self.parent[self.nodeToExplore.position]) 
+            self.table[pos].gandalfHere = True
+            self.table[pos].label = str(self.table[pos].cost - 1)
             if anotherWay == -1:
                 return -1    
-            self.table[pos].gandalfHere = True
             self.nodeToExplore = anotherWay
-            self.table[pos].label = str(self.table[pos].cost)
             return pos
         if (nextStep != -1 and nextStep != -2):
             self.table[nextStep].cost = self.table[self.parent[nextStep]].cost + 1
