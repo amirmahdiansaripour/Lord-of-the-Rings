@@ -8,6 +8,8 @@ class BFS(Logic):
     def __init__(self, table, width, height):
         super().__init__(table, width, height)
         self.frontier.append((self.startState.position, self.startState.cost))
+        global pos
+        pos = self.startIndex
 
     def pop(self):
         poppedNode = self.frontier.pop(0)
@@ -27,25 +29,27 @@ class BFS(Logic):
 
     def run(self):
         if len(self.frontier) == 0:
+            global pos
+            self.table[pos].gandalfHere = True
             return -1
         node = self.pop()
-        position = node.position
+        pos = node.position
 
         matchResult = self.preprocessNode(node)
         if matchResult == 1:
             return -2
 
-        if (self.checkUP(position)):
+        if (self.checkUP(pos)):
             self.action(node, -1)
 
-        if(self.checkRight(position)):
+        if(self.checkRight(pos)):
             self.action(node, self.numberOfRows)
             
-        if(self.checkDown(position)):
+        if(self.checkDown(pos)):
             self.action(node, 1)
         
-        if(self.checkLeft(position)):
+        if(self.checkLeft(pos)):
             self.action(node, -self.numberOfRows)
         
-        return position
+        return pos
             

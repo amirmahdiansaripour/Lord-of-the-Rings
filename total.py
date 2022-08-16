@@ -7,7 +7,7 @@ import math
 
 class Total:
     def __init__(self):
-        self.numOfRows, self.numOfCols = 10, 10
+        self.numOfRows, self.numOfCols = 5, 5
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
