@@ -77,6 +77,9 @@ class Screen:
             rowCounter += 1
         return self.table
 
+    def quit(self):
+        pygame.quit()
+
     def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(DELAY_TIME)
@@ -110,12 +113,6 @@ class Screen:
     def delay(self, time):
         pygame.time.delay(time)
         
-    def printIndices(self):
-        for cell in self.table:
-            getEvent()
-            pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
-            cell.printIndex()
-
     def drawPath(self, path):
         counter = len(path) - 1
         for stage in path:
@@ -130,7 +127,7 @@ class Screen:
         return False
 
     def placePieces(self):
-        currentIndex = 9
+        currentIndex = 0
         gandalfPlaced, castlePlaced = [False, False]
         print("Place the pieces\nPress g to place Gandalf\nPress c to place castle\nPress e to place enemies\nPress f if you finished")
         global DELAY_TIME
@@ -157,7 +154,7 @@ class Screen:
                         self.table[currentIndex].castleHere = True
                         castlePlaced = True
 
-                    if(event.key == pygame.K_e and self.emptyCell(currentIndex)):
+                    elif(event.key == pygame.K_e and self.emptyCell(currentIndex)):
                         self.table[currentIndex].enemyHere = True
 
                     if (event.key == pygame.K_LEFT and self.table[currentIndex].center[0] > 0):

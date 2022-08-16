@@ -41,7 +41,8 @@ class Total:
                 # self.UX.clearFrontier()
                 self.UX.clearExplored()
                 self.UI.drawPath(path)
-                self.UI.delay(20000)     
+                self.UI.delay(20000)
+                self.UI.quit()     
                 break
             self.UI.draw()
             self.table[found].gandalfHere = False
