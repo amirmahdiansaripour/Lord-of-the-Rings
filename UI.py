@@ -78,7 +78,7 @@ class Screen:
         return self.table
 
     def quit(self):
-        # pygame.quit()
+        pygame.quit()
         return
 
     def draw(self):
@@ -90,10 +90,9 @@ class Screen:
             pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
             point = (cell.x, cell.y)
             if(cell.inFrontier):
-                cell.label = str(cell.cost)
+                cell.label = 'F'
                 cell.printSetLabel(RED)
             elif(cell.inExplored):
-                cell.label = str(cell.cost)
                 cell.printSetLabel(BLUE)
             elif(cell.inPath):
                 cell.label = str(cell.stage)
@@ -139,7 +138,7 @@ class Screen:
         gandalfPlaced, castlePlaced = [False, False]
         print("Place the pieces\nPress g to place Gandalf\nPress c to place castle\nPress e to place enemies\nPress f if you finished")
         global DELAY_TIME
-        DELAY_TIME = 100
+        DELAY_TIME = 60
         self.draw()
         while(True):
             for event in pygame.event.get():

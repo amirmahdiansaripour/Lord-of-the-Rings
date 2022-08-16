@@ -103,12 +103,15 @@ class DFS(Logic):
             self.table[self.nodeToExplore.position].gandalfHere = False
             # print("Just explored node: " + str(self.nodeToExplore.position))
             self.table[self.nodeToExplore.position].cost = self.table[self.parent[self.nodeToExplore.position]].cost + 1
+            pos = self.nodeToExplore.position
             anotherWay = self.findAnotherWay(self.parent[self.nodeToExplore.position]) 
             if anotherWay == -1:
                 return -1    
-            self.table[anotherWay.position].gandalfHere = True
+            self.table[pos].gandalfHere = True
             self.nodeToExplore = anotherWay
-            return anotherWay.position
+            self.table[pos].label = str(self.table[pos].cost)
+            return pos
         if (nextStep != -1 and nextStep != -2):
             self.table[nextStep].cost = self.table[self.parent[nextStep]].cost + 1
+            self.table[nextStep].label = str(self.table[nextStep].cost - 1)
         return nextStep
