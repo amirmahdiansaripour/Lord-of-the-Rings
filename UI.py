@@ -42,7 +42,7 @@ class Cell:
         self.repeatedState = False
 
     def printIndex(self):
-        self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
+        self.screen.blit(self.font.render(str(self.cost), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         # self.screen.blit(self.font.render(str(self.center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         pygame.display.update()    
 

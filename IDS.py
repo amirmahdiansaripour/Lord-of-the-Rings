@@ -31,7 +31,7 @@ class IDS(Logic):
             self.makeNewDFS()
         found = self.DFS.run()
         if found == -1:
-            if self.currentDepth >= self.maxDepth:
+            if self.currentDepth > self.maxDepth:
                 return -1
             latestNode = self.DFS.getLatestExploredNode()
             self.table[latestNode].inExplored = True

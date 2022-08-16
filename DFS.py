@@ -12,11 +12,27 @@ class DFS(Logic):
         self.currentDepth = 0
 
 
+    def handleRepeatedStates(self, index, offset):
+        parent = self.table[index]
+        child = self.table[index + offset] 
+            # child.inFrontier = True
+            # child.label = 'R'
+        if(child.inExplored == False):
+            self.table[index + offset].cost = parent.cost + 1
+            return True
+        elif (child.inExplored == True and parent.cost + 1 < child.cost):
+            # print("Reapeted state: " + str(child.index))
+            # child.repeatedState = True
+            self.table[index + offset].cost = parent.cost + 1
+            return True
+        return False
+
     def action(self, position, offset):
             addedToFrontier = self.handleRepeatedStates(self.nodeToExplore.position, offset)
             if addedToFrontier:
                 self.parent[self.nodeToExplore.position + offset] = self.nodeToExplore.position
                 child = self.makeNewChild(self.nodeToExplore, offset, self.table[self.nodeToExplore.position].cost + 1)
+                # self.table[self.nodeToExplore.position + offset].cost = self.table[self.nodeToExplore.position].cost + 1
                 self.frontier.append((child.position, child.cost))
                 self.table[position + offset].inFrontier = True
                 self.nodeToExplore = child
@@ -57,31 +73,14 @@ class DFS(Logic):
             if(nextPossible):
                 return position
         
-        self.currentDepth -= 1
         return -1
         
 
-    def handleRepeatedStates(self, index, offset):
-        parent = self.table[index]
-        child = self.table[index + offset] 
-        if(child.inFrontier == False):
-            # child.inFrontier = True
-            # child.label = 'R'
-            if(child.inExplored == False):
-                return True
-            elif (child.inExplored == True and parent.cost + 1 < child.cost):
-                print("Reapeted state: " + str(child.index))
-                # child.repeatedState = True
-                self.table[index + offset].cost = parent.cost + 1
-                return True
-        return False
-
-
     def findAnotherWay(self, node):
-        self.currentDepth -= 1
-        # print("Node: " + str(node))
         if(node == -1 or self.currentDepth < 0):
             return -1
+        self.currentDepth -= 1
+        # print("Node: " + str(node))
         if (self.checkUP(node) and self.handleRepeatedStates(node, -1)):
             self.parent[node - 1] = node
             return self.makeNewChild(State(node), -1, self.table[node].cost + 1)
