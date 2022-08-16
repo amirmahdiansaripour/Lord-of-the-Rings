@@ -15,7 +15,7 @@ class IDS(Logic):
     def clearBoard(self):
         # print("Entered clear board func\n")
         for cell in self.table:
-            [cell.inFrontier, cell.inExplored] = [False, False]
+            [cell.inFrontier, cell.inExplored, cell.gandalfHere] = [False, False, False]
 
     def makeNewDFS(self):
         self.currentDepth += 1

@@ -15,26 +15,21 @@ class DFS(Logic):
     def handleRepeatedStates(self, index, offset):
         parent = self.table[index]
         child = self.table[index + offset] 
-            # child.inFrontier = True
-            # child.label = 'R'
-        if(child.inExplored == False):
+        if(child.inExplored == False and child.enemyHere == False):
             self.table[index + offset].cost = parent.cost + 1
             return True
-        elif (child.inExplored == True and parent.cost + 1 < child.cost):
-            # print("Reapeted state: " + str(child.index))
-            # child.repeatedState = True
+        elif (child.inExplored == True and child.enemyHere == False and parent.cost + 1 < child.cost):
             self.table[index + offset].cost = parent.cost + 1
             return True
         return False
 
     def action(self, position, offset):
-            addedToFrontier = self.handleRepeatedStates(self.nodeToExplore.position, offset)
+            addedToFrontier = self.handleRepeatedStates(position, offset)
             if addedToFrontier:
-                self.parent[self.nodeToExplore.position + offset] = self.nodeToExplore.position
-                child = self.makeNewChild(self.nodeToExplore, offset, self.table[self.nodeToExplore.position].cost + 1)
+                self.parent[position + offset] = self.nodeToExplore.position
+                child = self.makeNewChild(self.nodeToExplore, offset, self.table[position].cost + 1)
                 # self.table[self.nodeToExplore.position + offset].cost = self.table[self.nodeToExplore.position].cost + 1
                 self.frontier.append((child.position, child.cost))
-                self.table[position + offset].inFrontier = True
                 self.nodeToExplore = child
                 return True
             else:
@@ -110,7 +105,6 @@ class DFS(Logic):
             self.table[self.nodeToExplore.position].cost = self.table[self.parent[self.nodeToExplore.position]].cost + 1
             anotherWay = self.findAnotherWay(self.parent[self.nodeToExplore.position]) 
             if anotherWay == -1:
-                print("failed")
                 return -1    
             self.table[anotherWay.position].gandalfHere = True
             self.nodeToExplore = anotherWay
