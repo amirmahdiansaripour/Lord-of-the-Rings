@@ -7,7 +7,7 @@ import math
 
 class Total:
     def __init__(self):
-        self.numOfRows, self.numOfCols = 5, 5
+        self.numOfRows, self.numOfCols = 10, 15
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
@@ -19,10 +19,11 @@ class Total:
         elif algorithmToRun == "DFS":
             self.UX = DFS(self.table, self.numOfCols, self.numOfRows)
         elif algorithmToRun == "IDS":
-            maxDepth = input("Enter max depth of IDS: ")
+            maxDepth = input("Enter the max depth of IDS: ")
             self.UX = IDS(self.table, self.numOfCols, self.numOfRows, int(maxDepth))
         elif algorithmToRun == "A*":
-            self.UX = Astar(self.table, self.numOfCols, self.numOfRows)
+            alpha = input("Enter the weight of heuristic function: ")
+            self.UX = Astar(self.table, self.numOfCols, self.numOfRows, alpha)
         self.PLACES_DONE = True
 
     def flow(self):        
