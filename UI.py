@@ -34,15 +34,15 @@ class Cell:
         self.inFrontier = False
         self.inExplored = False
         self.inPath = False
-        self.dontEnter = False
-        self.inBorder = False
         self.placing = False
         self.stage = 0
         self.label = ''
         self.gandalfInitPlace = False
+        self.cost = 0
+        self.repeatedState = False
 
     def printIndex(self):
-        self.screen.blit(self.font.render(str(self.index), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
+        self.screen.blit(self.font.render(str(self.cost), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         # self.screen.blit(self.font.render(str(self.center), True, WHITE), (self.x - 10 + (PIC_SIZE_X // 2), self.y - 10 + (PIC_SIZE_Y // 2)))
         pygame.display.update()    
 
@@ -77,6 +77,10 @@ class Screen:
             rowCounter += 1
         return self.table
 
+    def quit(self):
+        pygame.quit()
+        return
+
     def draw(self):
         self.SCREEN.fill(BLACK)               
         self.delay(DELAY_TIME)
@@ -89,15 +93,16 @@ class Screen:
                 cell.label = 'F'
                 cell.printSetLabel(RED)
             elif(cell.inExplored):
-                cell.label = ''
+                if cell.cost <= 0:
+                    cell.label = ''
                 cell.printSetLabel(BLUE)
             elif(cell.inPath):
                 cell.label = str(cell.stage)
                 cell.printSetLabel(BLUE)
-            elif(cell.inBorder):
-                cell.printSetLabel(PINK)
             elif(cell.placing):
-                cell.printSetLabel(GREEN)
+                cell.printSetLabel(PINK)
+            elif(cell.repeatedState):
+                cell.printSetLabel(PINK)
 
             if(cell.gandalfHere):
                 self.SCREEN.blit(GANDALF, point)
@@ -110,12 +115,6 @@ class Screen:
     def delay(self, time):
         pygame.time.delay(time)
         
-    def printIndices(self):
-        for cell in self.table:
-            getEvent()
-            pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
-            cell.printIndex()
-
     def drawPath(self, path):
         counter = len(path) - 1
         for stage in path:
@@ -124,24 +123,31 @@ class Screen:
             counter -= 1
         self.draw()
 
+    def printIndices(self):
+        for cell in self.table:
+            getEvent()
+            pygame.draw.rect(self.SCREEN, WHITE, cell.rect, 1)
+            cell.printIndex()
+
+
     def emptyCell(self, index):
         if (self.table[index].gandalfHere == False and self.table[index].castleHere == False and self.table[index].enemyHere == False):
             return True
         return False
 
     def placePieces(self):
-        currentIndex = 9
+        currentIndex = 0
         gandalfPlaced, castlePlaced = [False, False]
         print("Place the pieces\nPress g to place Gandalf\nPress c to place castle\nPress e to place enemies\nPress f if you finished")
         global DELAY_TIME
-        DELAY_TIME = 100
+        DELAY_TIME = 60
         self.draw()
         while(True):
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if(event.key == pygame.K_f):
                         if(castlePlaced == True and gandalfPlaced == True):
-                            DELAY_TIME = 400
+                            DELAY_TIME = 700
                             self.table[currentIndex].placing = False
                             self.draw()
                             return
@@ -157,7 +163,7 @@ class Screen:
                         self.table[currentIndex].castleHere = True
                         castlePlaced = True
 
-                    if(event.key == pygame.K_e and self.emptyCell(currentIndex)):
+                    elif(event.key == pygame.K_e and self.emptyCell(currentIndex)):
                         self.table[currentIndex].enemyHere = True
 
                     if (event.key == pygame.K_LEFT and self.table[currentIndex].center[0] > 0):

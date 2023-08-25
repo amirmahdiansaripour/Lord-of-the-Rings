@@ -7,7 +7,7 @@ import math
 
 class Total:
     def __init__(self):
-        self.numOfRows, self.numOfCols = 10, 10
+        self.numOfRows, self.numOfCols = 10, 15
         self.UI = UI.Screen(self.numOfCols, self.numOfRows)
         self.table = self.UI.initField()
 
@@ -19,10 +19,11 @@ class Total:
         elif algorithmToRun == "DFS":
             self.UX = DFS(self.table, self.numOfCols, self.numOfRows)
         elif algorithmToRun == "IDS":
-            maxDepth = input("Enter max depth of IDS: ")
+            maxDepth = input("Enter the max depth of IDS: ")
             self.UX = IDS(self.table, self.numOfCols, self.numOfRows, int(maxDepth))
         elif algorithmToRun == "A*":
-            self.UX = Astar(self.table, self.numOfCols, self.numOfRows)
+            alpha = input("Enter the weight of heuristic function: ")
+            self.UX = Astar(self.table, self.numOfCols, self.numOfRows, alpha)
         self.PLACES_DONE = True
 
     def flow(self):        
@@ -35,13 +36,15 @@ class Total:
                 print("Loose!!!!")
                 self.UI.draw()
                 self.UI.delay(20000)
+                self.UI.quit()     
                 break
             elif found == -2:
                 path = self.UX.getPath()
                 # self.UX.clearFrontier()
                 self.UX.clearExplored()
                 self.UI.drawPath(path)
-                self.UI.delay(20000)     
+                self.UI.delay(20000)
+                self.UI.quit()     
                 break
             self.UI.draw()
             self.table[found].gandalfHere = False

@@ -7,31 +7,21 @@ class IDS(Logic):
         super().__init__(table, width, height)
         self.maxDepth = maxDepth
         self.currentDepth = 1
-        self.makeBorderSet()
+        # self.makeBorderSet()
         self.newDFS = False
-        self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows)
+        self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows, self.currentDepth)
         
-    def calcManhattanDist(self, node):
-        return abs(node.center[0] - self.table[self.startIndex].center[0]) + abs(node.center[1] - self.table[self.startIndex].center[1])
-
-    def makeBorderSet(self):
-        for cell in self.table:
-            distance = self.calcManhattanDist(cell)
-            if distance >= self.currentDepth + 1:
-                cell.dontEnter = True
-            if distance == self.currentDepth + 1:
-                cell.label = str(self.currentDepth)
-                cell.inBorder = True
-
+    
     def clearBoard(self):
+        # print("Entered clear board func\n")
         for cell in self.table:
-            [cell.inFrontier, cell.inExplored, cell.inBorder, cell.dontEnter] = [False, False, False, False]
+            [cell.inFrontier, cell.inExplored, cell.gandalfHere] = [False, False, False]
 
     def makeNewDFS(self):
         self.currentDepth += 1
         self.clearBoard()
-        self.makeBorderSet()
-        self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows)
+        # self.makeBorderSet()
+        self.DFS = DFS(self.table, self.numberOfCols, self.numberOfRows, self.currentDepth)
         self.parent.clear()
         self.parent = self.DFS.parent
         self.newDFS = False
@@ -41,7 +31,7 @@ class IDS(Logic):
             self.makeNewDFS()
         found = self.DFS.run()
         if found == -1:
-            if self.currentDepth >= self.maxDepth:
+            if self.currentDepth > self.maxDepth:
                 return -1
             latestNode = self.DFS.getLatestExploredNode()
             self.table[latestNode].inExplored = True
