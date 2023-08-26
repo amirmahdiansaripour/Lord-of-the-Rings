@@ -6,7 +6,7 @@ import math
 class Astar(BFS):
     def __init__(self, table, width, height, alpha = 1):
         super().__init__(table, width, height)
-        self.alpha = int(alpha)
+        self.alpha = float(alpha)
         self.frontier = []
         heappush(self.frontier, (0 + self.hueristic(self.startIndex), self.startIndex))
 
@@ -16,8 +16,11 @@ class Astar(BFS):
         goalX = int(self.table[self.goalIndex].x)
         goalY = int(self.table[self.goalIndex].y)
         squaredDistance = (currX - goalX)**2 + (currY - goalY)**2
-        return self.alpha * math.sqrt(squaredDistance)
-
+        # print("squared: ", squaredDistance)
+        heuristic = self.alpha * math.sqrt(squaredDistance)
+        # print("heuristic: ", self.alpha * math.sqrt(squaredDistance))
+        return heuristic
+    
     def pop(self):
         poppedNode = heappop(self.frontier)
         # print(poppedNode)

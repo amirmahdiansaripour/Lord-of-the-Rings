@@ -13,7 +13,7 @@ class Total:
 
     def getInput(self):
         self.UI.placePieces()
-        algorithmToRun = input("Enter algorithm to run: ")
+        algorithmToRun = input("Enter the algorithm to run (BFS, DFS, IDS, A*): ")
         if algorithmToRun == "BFS":
             self.UX = BFS(self.table, self.numOfCols, self.numOfRows)
         elif algorithmToRun == "DFS":
