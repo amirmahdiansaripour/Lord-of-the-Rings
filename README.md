@@ -30,7 +30,9 @@ A simple BFS example (run on windows using Visual Studio Code and Anaconda):
 
 
 
-https://github.com/amirmahdiansaripour/test/assets/92050925/b4e76be6-2c3b-42b4-8dc2-8ef6134b5fb6
+https://github.com/amirmahdiansaripour/Lord-of-the-Rings/assets/92050925/0495c32d-d0f7-425f-a71f-2d3dbe667eba
+
+
 
 
 Please see the report included in the repository for more details and a thorough explanation about the project and search algorithms (their time/memory complexity, heuristic methods, etc.)
