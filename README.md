@@ -13,8 +13,6 @@ python3 total.py
 
 A window will be shown, in which the pieces of the game should be placed (Gandalf, Orcs, and The Castle). You can switch between cells in the grid by clicking → ↑ ↓ ← 
 
-<img src="./screen-photos/1.png" width = 600 height = 300>
-
 ![img1](./screen-photos/1.png)
 
 
