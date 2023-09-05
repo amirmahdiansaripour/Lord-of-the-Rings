@@ -28,7 +28,7 @@ The algorithm will then run and the Gandalf might reach the Castle (He should no
 
 A simple BFS example (run on windows using Visual Studio Code and Anaconda):
 
-![BFS-sample](./screen-photos/BFS-sample.mp4)
+![BFS-sample](./screen-photos/BFS-sample.gif)
 
 Please see the report included in the repository for more details and a thorough explanation about the project and search algorithms (their time/memory complexity, heuristic methods, etc.)
 
