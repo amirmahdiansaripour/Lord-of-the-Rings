@@ -13,18 +13,18 @@ python3 total.py
 
 A window will be shown, in which the pieces of the game should be placed (Gandalf, Orcs, and The Castle). You can switch between cells in the grid by clicking → ↑ ↓ ← 
 
-![12](https://github.com/amirmahdiansaripour/test/assets/92050925/dd0b1488-5465-4f0e-a9d0-0e01bbdc5a2e)
+![img1](./screen-photos/1.png)
 
 
 After clicking 'f' to finish locating the pieces, the kind of algorithm is asked:
 
 If you enter IDS, the maximum depth is asked as the second input. If you enter A*, the weight is asked. (No additional input is required for BFS and DFS).
 
-![13](https://github.com/amirmahdiansaripour/test/assets/92050925/ea032f73-98d0-4976-9925-3dc6707f6d99)
+![img2](./screen-photos/2.png)
 
 The algorithm will then run and the Gandalf might reach the Castle (He should not hit the Orcs!) 
 
-![14](https://github.com/amirmahdiansaripour/test/assets/92050925/3a18e4a9-34a2-4713-9c9c-49578bfb4038)
+![img3](./screen-photos/3.png)
 
 A simple BFS example (run on windows using Visual Studio Code and Anaconda):
 
