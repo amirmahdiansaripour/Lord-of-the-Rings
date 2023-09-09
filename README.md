@@ -3,7 +3,7 @@ Comparison of different search algorithms in artificial intelligence.
 
 This project is an extension of the [second assignment of the Artificial Intelligence Course](https://github.com/amirmahdiansaripour/Artificial-Inteligence-Assigments) I have taken in the University of Tehran, Spring 2022. The project is about different searching mehtods (BFS, DFS, IDS, and Astar), and demonstrates how they differ in the way their frontier and explored sets are updated.
 
-How to run :
+## How to run :
 
 Make sure that the pygame library is installed on your OS for graphical interface.
 
@@ -30,7 +30,7 @@ A simple BFS example (run on windows using Visual Studio Code and Anaconda):
 
 ![BFS-sample](./screen-photos/BFS-sample.gif)
 
-Please see the report included in the repository for more details and a thorough explanation about the project and search algorithms (their time/memory complexity, heuristic methods, etc.)
+$\textbf{Please see the report included in the repository for more details and a thorough explanation about the project and search algorithms (their time/memory complexity, heuristic methods, etc.)}$
 
 
 
