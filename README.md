@@ -30,8 +30,7 @@ A simple BFS example (run on windows using Visual Studio Code and Anaconda):
 
 ![BFS-sample](./screen-photos/BFS-sample.gif)
 
-$\textbf{Please view the report included in the repository for a thorough explanation about the project and search algorithms (time and memory complexity, 
-
+$\textbf{Please view the report included in the repository for a thorough explanation about the project and search algorithms (time and memory complexity, \\
 completeness and optimality, etc.)}$
 
 
