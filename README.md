@@ -32,7 +32,4 @@ A simple BFS example (run on windows using Visual Studio Code and Anaconda):
 
 Please view the **report** for a thorough explanation about time and memory complexity of the algorithms.
 
-$\textbf{complexity, completeness and optimality, etc.)}$
-
-
 
